@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>439513021398-7cm1tioe8inaksp3g47bemoonn4kfe87.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.439513021398-7cm1tioe8inaksp3g47bemoonn4kfe87</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAA4vtL6kDKCeSxWnGuMmVhE9n61UWNol8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>439513021398</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.monash.MyCard</string>
+	<key>PROJECT_ID</key>
+	<string>mycard-497b2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mycard-497b2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:439513021398:ios:d14956defbcf1cb0cd0277</string>
+</dict>
+</plist>
