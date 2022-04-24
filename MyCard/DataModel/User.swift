@@ -12,9 +12,10 @@ class User: NSObject, Codable {
     var id: String?
     var title: String?
     var surname: String?
-    var givenName: String?
-    var nickName: String?
-    var dob: Date?
+    var givenname: String?
+    var nickname: String?
+    var dob: String?
     var mobile: String?
     var email: String?
+    var uid: String?
 }
