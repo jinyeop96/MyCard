@@ -14,6 +14,8 @@ enum DatabaseChange{
 }
 
 enum ListenerType {
+    case my
+    case newCard
     case contacts
     case all
     case update
@@ -28,25 +30,24 @@ protocol DatabaseListener: AnyObject {
     func didSucceedSignIn()
     func didNotSucceedSignUp()
     func didNotSucceedSignIn()
-    
+    func didSucceedCreateCard()
+    func didNotSucceedCreateCard()
 }
 
 protocol DatabaseProtocol: AnyObject {
-    
+    // Listeners
     func addListener(listener: DatabaseListener)
     func removeListener(listener: DatabaseListener)
     
-    //func addUser(name: String, abilities:String, universe: Universe) -> User
+    // Users
     func deleteUser(user: User)
-    
-//    var userTeam: Team {get}
-//    func addTeam(teamName: String) -> Team
-//    func deleteTeam(team: Team)
-//    func addHeroToTeam(hero: Superhero, team: Team) -> Bool
-//    func removeHeroFromTeam(hero: Superhero, team: Team)
-
-    
     func signUp(user: User, email: String, password: String)
     func signIn(email: String, password: String)
     func logOut()
+    
+    // Cards
+    func addCard(card: Card)
+    
+
 }
+

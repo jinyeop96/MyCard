@@ -70,5 +70,14 @@ class SignInViewController: UIViewController, DatabaseListener {
     func didNotSucceedSignUp() {
         // Do Nothing
     }
+    
+    
+    func didSucceedCreateCard() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedCreateCard() {
+        // Do Nothing
+    }
 
 }

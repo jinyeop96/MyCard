@@ -27,8 +27,9 @@
 		D8C75A6D281540040040A2A2 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A6A281540040040A2A2 /* MulticastDelegate.swift */; };
 		D8C75A70281540420040A2A2 /* UIViewController+displayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A6F281540420040A2A2 /* UIViewController+displayMessage.swift */; };
 		D8C75A73281540890040A2A2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A72281540890040A2A2 /* User.swift */; };
-		D8C75A752815508B0040A2A2 /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A742815508B0040A2A2 /* FirebaseController.swift */; };
 		D8C75A77281551080040A2A2 /* DatabaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A76281551080040A2A2 /* DatabaseProtocol.swift */; };
+		D8C75A792815B2810040A2A2 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A782815B2810040A2A2 /* Card.swift */; };
+		D8D7B8632817E9280073A97B /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D7B8622817E9280073A97B /* FirebaseController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,8 +52,9 @@
 		D8C75A6A281540040040A2A2 /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		D8C75A6F281540420040A2A2 /* UIViewController+displayMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+displayMessage.swift"; sourceTree = "<group>"; };
 		D8C75A72281540890040A2A2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		D8C75A742815508B0040A2A2 /* FirebaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FirebaseController.swift; path = "../../../lab/FIT3178-W04/FIT3178-W02-Lab/Database/FirebaseController.swift"; sourceTree = "<group>"; };
 		D8C75A76281551080040A2A2 /* DatabaseProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseProtocol.swift; sourceTree = "<group>"; };
+		D8C75A782815B2810040A2A2 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		D8D7B8622817E9280073A97B /* FirebaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +125,7 @@
 			children = (
 				D8C75A6A281540040040A2A2 /* MulticastDelegate.swift */,
 				D8C75A76281551080040A2A2 /* DatabaseProtocol.swift */,
-				D8C75A742815508B0040A2A2 /* FirebaseController.swift */,
+				D8D7B8622817E9280073A97B /* FirebaseController.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -132,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				D8C75A72281540890040A2A2 /* User.swift */,
+				D8C75A782815B2810040A2A2 /* Card.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -224,13 +227,14 @@
 				D8C75A6728153C570040A2A2 /* SignUpViewController.swift in Sources */,
 				D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */,
 				D8C75A6528153C4E0040A2A2 /* SignInViewController.swift in Sources */,
-				D8C75A752815508B0040A2A2 /* FirebaseController.swift in Sources */,
+				D8D7B8632817E9280073A97B /* FirebaseController.swift in Sources */,
 				D8C75A5B281532290040A2A2 /* ContactsTableViewController.swift in Sources */,
 				D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */,
 				D8C75A592815321D0040A2A2 /* MyTableViewController.swift in Sources */,
 				D8C75A6D281540040040A2A2 /* MulticastDelegate.swift in Sources */,
 				D8C75A70281540420040A2A2 /* UIViewController+displayMessage.swift in Sources */,
 				D8C75A77281551080040A2A2 /* DatabaseProtocol.swift in Sources */,
+				D8C75A792815B2810040A2A2 /* Card.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,39 +7,99 @@
 
 import UIKit
 
-class MyTableViewController: UITableViewController {
-
+class MyTableViewController: UITableViewController, DatabaseListener {
+    // MARK: - Properties
+    let BUSINESS_CARD_SECTION = 0
+    let PERSONAL_CARD_SECTION = 1
+    let BUSINESS_CARD_CELL = "businessCardCell"
+    let PERSONAL_CARD_CELL = "personalCardCell"
+    
+    var businessCards = [Card]()
+    var personalCards = [Card]()
+    
+    var listenerType: ListenerType = .my
+    var databaseController: DatabaseProtocol?
+    
+    
+    // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        databaseController = appDelegate.databaseController
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        databaseController?.addListener(listener: self)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        databaseController?.removeListener(listener: self)
     }
 
+    
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        switch section {
+        case BUSINESS_CARD_SECTION :
+            return businessCards.count
+        case PERSONAL_CARD_SECTION:
+            return personalCards.count
+        default:
+            return 0
+        }
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        if indexPath.section == BUSINESS_CARD_SECTION {
+            // Create resuable cell for business card
+            let businessCardCell = tableView.dequeueReusableCell(withIdentifier: BUSINESS_CARD_CELL, for: indexPath)
+            
+            var content = businessCardCell.defaultContentConfiguration()
+            let businessCard = businessCards[indexPath.row]
+            
+            // Set title to company name and secondaryName to user's name
+            if let companyName = businessCard.companyName{
+                content.text = companyName
+            }
+            
+            if let surname = businessCard.surname, let givenname = businessCard.givenname {
+                content.secondaryText = surname + " " + givenname
+            }
+            
+            businessCardCell.contentConfiguration = content
 
-        // Configure the cell...
+            return businessCardCell
+        } else {
+            // Create resuable cell for business card
+            let personalCardCell = tableView.dequeueReusableCell(withIdentifier: PERSONAL_CARD_CELL, for: indexPath)
+            
+            var content = personalCardCell.defaultContentConfiguration()
+            let personalCard = personalCards[indexPath.row]
+            
+            // Set title to user's name and secondaryName to user's email
+            if let surname = personalCard.surname, let givenname = personalCard.givenname {
+                content.text = surname + " " + givenname
+            }
+            
+            if let email = personalCard.email{
+                content.secondaryText = email
+            }
+            
+            personalCardCell.contentConfiguration = content
 
-        return cell
+            return personalCardCell
+        }
+
     }
-    */
+    
 
     /*
     // Override to support conditional editing of the table view.
@@ -75,15 +135,36 @@ class MyTableViewController: UITableViewController {
         return true
     }
     */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    // MARK: - Database specific methods
+    
+    
+    
+    // MARK: - Unnecessary inherited methods
+    func didSucceedSignUp() {
+        // Do Nothing
     }
-    */
+    
+    func didSucceedSignIn() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedSignUp() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedSignIn() {
+        // Do Nothing
+    }
+    
+    func didSucceedCreateCard() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedCreateCard() {
+        // Do Nothing
+    }
+    
+
 
 }

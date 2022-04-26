@@ -94,4 +94,12 @@ class SignUpViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     
+    func didSucceedCreateCard() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedCreateCard() {
+        // Do Nothing
+    }
+    
 }
