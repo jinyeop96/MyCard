@@ -104,7 +104,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     // MARK: - Documents sources methods
     func addCard(card: Card) {
-        //
+        do {
+            let _ = try cardsRef?.addDocument(from: card)
+            
+            alertListener(listenerType: .newCard, successful: true)
+        } catch {
+            alertListener(listenerType: .newCard, successful: false)
+        } // do-catch ends
     }
     
     func deleteUser(user: User) {
@@ -129,6 +135,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
             if listenerType == .signIn && successful == false {
                 listener.didNotSucceedSignIn()
+            }
+            
+            if listenerType == .newCard && successful == true {
+                listener.didSucceedCreateCard()
+            }
+            
+            if listenerType == .newCard && successful == false {
+                listener.didNotSucceedCreateCard()
             }
         }
     }

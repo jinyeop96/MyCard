@@ -131,8 +131,6 @@ class NewCardViewController: UIViewController, DatabaseListener {
     }
     
     
-    
-    
     // MARK: - Unnecessary inherited methods
     func didSucceedSignUp() {
         // Do Nothing
