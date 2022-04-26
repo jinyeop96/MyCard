@@ -100,6 +100,27 @@ class MyTableViewController: UITableViewController, DatabaseListener {
 
     }
     
+    // Setting Section names
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case BUSINESS_CARD_SECTION:
+            if businessCards.count > 0{
+                return "Business cards"
+            } else {
+                return ""
+            }
+        case PERSONAL_CARD_SECTION:
+            if personalCards.count > 0{
+                return "Personal cards"
+            } else {
+                return ""
+            }
+            
+        default:
+            return ""
+        }
+    }
+    
 
     /*
     // Override to support conditional editing of the table view.
@@ -137,7 +158,25 @@ class MyTableViewController: UITableViewController, DatabaseListener {
     */
     
     // MARK: - Database specific methods
-    
+    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+        businessCards.removeAll()
+        personalCards.removeAll()
+        
+        for card in userCards {
+            if let isPersonal = card.isPersonal {
+                if isPersonal {
+                    personalCards.insert(card, at: personalCards.count)
+                }
+                
+                if !isPersonal {
+                    businessCards.insert(card, at: businessCards.count)
+                }
+            }
+            
+        }
+        
+        tableView.reloadData()
+    }
     
     
     // MARK: - Unnecessary inherited methods

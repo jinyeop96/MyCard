@@ -147,6 +147,10 @@ class NewCardViewController: UIViewController, DatabaseListener {
     func didNotSucceedSignIn() {
         // Do Nothing
     }
+    
+    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+        // Do Nothing
+    }
    
 
 }

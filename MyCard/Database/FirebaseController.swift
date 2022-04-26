@@ -21,12 +21,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var usersRef: CollectionReference?
     var cardsRef: CollectionReference?
     
-    
+    var userCards: [Card]
+    var allCards: [Card]
     
     override init(){
         FirebaseApp.configure() // must first call the configure method of FirebaseApp
         authController = Auth.auth()
         database = Firestore.firestore()
+        userCards = [Card]()
+        allCards = [Card]()
         
         super.init()
         
@@ -39,6 +42,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
     // MARK: - DatabaseProtocol specific methods
     func addListener(listener: DatabaseListener) {
         listeners.addDelegate(listener)
+        
+        if listener.listenerType == .my {
+            alertListener(listenerType: .my, successful: true)
+        }
     }
     
     func removeListener(listener: DatabaseListener) {
@@ -83,10 +90,12 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 // 2. Access to the user document with provided email and set currentUser
                 setUpUserListener(email: email)
                 
+                
                 // 3. Alert listener
                 await MainActor.run {
-                    alertListener(listenerType: .signIn, successful: true)
+                    self.alertListener(listenerType: .signIn, successful: true)
                 }
+                
             } catch {
                 await MainActor.run {
                     alertListener(listenerType: .signIn, successful: false)
@@ -105,6 +114,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     // MARK: - Documents sources methods
     func addCard(card: Card) {
         do {
+            card.ownerNickname = currentUser?.nickname ?? ""
             let _ = try cardsRef?.addDocument(from: card)
             
             alertListener(listenerType: .newCard, successful: true)
@@ -121,39 +131,44 @@ class FirebaseController: NSObject, DatabaseProtocol {
     // MARK: - FirebaseController specific methods
     private func alertListener(listenerType: ListenerType, successful: Bool){
         listeners.invoke { (listener) in
-            if listenerType == .signUp && successful == true {
+            if listenerType == .signUp && successful {
                 listener.didSucceedSignUp()
             }
             
-            if listenerType == .signUp && successful == false {
+            if listenerType == .signUp && !successful {
                 listener.didNotSucceedSignUp()
             }
             
-            if listenerType == .signIn && successful == true {
+            if listenerType == .signIn && successful{
                 listener.didSucceedSignIn()
             }
             
-            if listenerType == .signIn && successful == false {
+            if listenerType == .signIn && !successful{
                 listener.didNotSucceedSignIn()
             }
             
-            if listenerType == .newCard && successful == true {
+            if listenerType == .newCard && successful{
                 listener.didSucceedCreateCard()
             }
             
-            if listenerType == .newCard && successful == false {
+            if listenerType == .newCard && !successful{
                 listener.didNotSucceedCreateCard()
+            }
+            
+            if listenerType == .my && successful{
+                listener.onUserCardsChanges(change: .update, userCards: userCards)
             }
         }
     }
     
-    private func setUpUserListener(email: String){
+    private func setUpUserListener(email: String) {
         usersRef?.whereField("email", isEqualTo: email).addSnapshotListener { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot, let userSnapshot = querySnapshot.documents.first, error == nil else {
                 print("Error fetching teams: \(error!)")
                 return
             }
             
+            // Parse user snapshot
             self.currentUser = User()
             
             self.currentUser?.id = userSnapshot.data()["id"] as? String ?? ""
@@ -165,6 +180,85 @@ class FirebaseController: NSObject, DatabaseProtocol {
             self.currentUser?.mobile = userSnapshot.data()["mobile"] as? String ?? ""
             self.currentUser?.email = userSnapshot.data()["email"] as? String ?? ""
             self.currentUser?.uid = userSnapshot.data()["uid"] as? String ?? ""
+            
+            self.setUpCardsListener(nickname: self.currentUser?.nickname)
         }
     }
+    
+    private func setUpCardsListener(nickname: String?) {
+        if let nickname = nickname {
+            cardsRef?.whereField("ownerNickname", isEqualTo: nickname).addSnapshotListener{ (querySnapshot, error ) in
+
+                guard let querySnapshot = querySnapshot else {
+                    print("Failed to fetch documents with error: \(String(describing: error))")
+                    return
+                }
+
+                
+                self.parseCardsSnapshot(snapshot: querySnapshot)
+                
+                
+            }
+        }
+        
+    }
+    
+    private func parseCardsSnapshot(snapshot: QuerySnapshot){
+        var parsedCard: Card?
+
+        snapshot.documentChanges.forEach{ (change) in
+
+            // 1. For each document, parse into card object
+            do {
+                parsedCard = try change.document.data(as: Card.self)
+            } catch {
+                print("Error : \(error)")
+                return
+            }
+
+            guard let card = parsedCard else {
+                print("card does not exist")
+                return
+            }
+            
+            if change.type == .added {
+                userCards.insert(card, at: Int(change.newIndex))
+            } else if change.type == .modified {
+                userCards[Int(change.oldIndex)] = card
+            } else if change.type == .removed {
+                userCards.remove(at: Int(change.oldIndex))
+            }
+            
+        } // forEach ends
+        
+        self.alertListener(listenerType: .my, successful: true)
+    }
+    
+//    private func parseCardsListener(snapshot: QuerySnapshot) {
+//        var parsedCard: Card?
+//
+//        snapshot.documentChanges.forEach{ (change) in
+//
+//            // 1. For each document, parse into card object
+//            do {
+//                parsedCard = try change.document.data(as: Card.self)
+//            } catch {
+//                print("Error : \(error)")
+//                return
+//            }
+//
+//            guard let card = parsedCard else {
+//                print("card does not exist")
+//                return
+//            }
+//
+//            if change.type == .added {
+//                allCards.insert(card, at: Int(change.newIndex))
+//            }
+//
+//            if change.type == .modified {
+//                allCards
+//            }
+//        }
+//    }
 }

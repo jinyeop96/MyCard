@@ -79,5 +79,8 @@ class SignInViewController: UIViewController, DatabaseListener {
     func didNotSucceedCreateCard() {
         // Do Nothing
     }
-
+    
+    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+        // Do Nothing
+    }
 }

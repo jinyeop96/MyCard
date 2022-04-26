@@ -32,6 +32,8 @@ protocol DatabaseListener: AnyObject {
     func didNotSucceedSignIn()
     func didSucceedCreateCard()
     func didNotSucceedCreateCard()
+    
+    func onUserCardsChanges(change: ListenerType, userCards: [Card])
 }
 
 protocol DatabaseProtocol: AnyObject {
