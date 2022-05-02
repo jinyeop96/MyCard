@@ -87,8 +87,8 @@ class NewCardViewController: UIViewController, DatabaseListener {
        
         // 3. Create card object
         card.title = title
-        card.surname = surname
-        card.givenname = givenname
+        card.name = givenname + " " + surname
+        card.nameLowercased = card.name?.lowercased() ?? ""
         card.address = street + ", " + suburb + ", " + state + ", " + postcode
         card.email = email
         card.companyName = companyName
@@ -149,6 +149,9 @@ class NewCardViewController: UIViewController, DatabaseListener {
     }
     
     func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+        // Do Nothing
+    }
+    func didSearchCards(cards: [Card]) {
         // Do Nothing
     }
    

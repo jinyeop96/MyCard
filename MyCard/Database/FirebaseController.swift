@@ -132,6 +132,41 @@ class FirebaseController: NSObject, DatabaseProtocol {
         //
     }
     
+    func searchCards(searchText: String){
+        cardsRef?.whereField("nameLowercased", isEqualTo: searchText).getDocuments{(querySnapshot, error) in
+            guard let querySnapshot = querySnapshot, error == nil else {
+                if let error = error {
+                    print("Error fetching cards: \(error)")
+                }
+                return
+            }
+            
+            // Parse retrieved cards snapshots to Card objects.
+            var cards = [Card]()
+            for card in querySnapshot.documents {
+                var parsedCard: Card?
+                do {
+                    parsedCard = try card.data(as: Card.self)   // parse
+                    
+                    if let parsedCard = parsedCard {
+                        cards.insert(parsedCard, at: cards.count)
+                    }
+                    
+                } catch {
+                    print(error)
+                }
+                
+            }
+            
+            // Pass parsed card objects back to serach table view controller
+            self.listeners.invoke{ (listener) in
+                if listener.listenerType == .searchCards {
+                    listener.didSearchCards(cards: cards)
+                }
+            }
+        }
+    }
+    
     
     // MARK: - FirebaseController specific methods
     private func alertListener(listenerType: ListenerType, successful: Bool){

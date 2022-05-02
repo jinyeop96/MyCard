@@ -12,8 +12,8 @@ class Card: NSObject, Codable {
     @DocumentID var id: String?
     var isPersonal: Bool?
     var title: String?
-    var surname: String?
-    var givenname: String?
+    var name: String?
+    var nameLowercased: String? // This is used for searching 
     var companyName: String?
     var department: String?
     var address: String?

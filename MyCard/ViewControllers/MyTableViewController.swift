@@ -9,11 +9,6 @@ import UIKit
 
 class MyTableViewController: UITableViewController, DatabaseListener {
     // MARK: - Properties
-    let BUSINESS_CARD_SECTION = 0
-    let PERSONAL_CARD_SECTION = 1
-    let BUSINESS_CARD_CELL = "businessCardCell"
-    let PERSONAL_CARD_CELL = "personalCardCell"
-    
     let CARD_DETAIL_SEGUE = "cardDetailSegue"
     
     var businessCards = [Card]()
@@ -60,64 +55,21 @@ class MyTableViewController: UITableViewController, DatabaseListener {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // Helper methods are declared in UITableViewController+displayingCards file
         if indexPath.section == BUSINESS_CARD_SECTION {
-            // Create resuable cell for business card
-            let businessCardCell = tableView.dequeueReusableCell(withIdentifier: BUSINESS_CARD_CELL, for: indexPath)
-            
-            var content = businessCardCell.defaultContentConfiguration()
-            let businessCard = businessCards[indexPath.row]
-            
-            // Set title to company name and secondaryName to user's name
-            if let companyName = businessCard.companyName{
-                content.text = companyName
-            }
-            
-            if let surname = businessCard.surname, let givenname = businessCard.givenname {
-                content.secondaryText = surname + " " + givenname
-            }
-            
-            businessCardCell.contentConfiguration = content
-
-            return businessCardCell
+            return assignBusinessCards(tableView: tableView, indexPath: indexPath, businessCards: businessCards)
         } else {
-            // Create resuable cell for business card
-            let personalCardCell = tableView.dequeueReusableCell(withIdentifier: PERSONAL_CARD_CELL, for: indexPath)
-            
-            var content = personalCardCell.defaultContentConfiguration()
-            let personalCard = personalCards[indexPath.row]
-            
-            // Set title to user's name and secondaryName to user's email
-            if let surname = personalCard.surname, let givenname = personalCard.givenname {
-                content.text = surname + " " + givenname
-            }
-            
-            if let email = personalCard.email{
-                content.secondaryText = email
-            }
-            
-            personalCardCell.contentConfiguration = content
-
-            return personalCardCell
+            return assignPersonalCards(tableView: tableView, indexPath: indexPath, personalCards: personalCards)
         }
-
     }
     
     // Setting Section names
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case BUSINESS_CARD_SECTION:
-            if businessCards.count > 0{
-                return "Business cards"
-            } else {
-                return ""
-            }
+            return "Business cards"
         case PERSONAL_CARD_SECTION:
-            if personalCards.count > 0{
-                return "Personal cards"
-            } else {
-                return ""
-            }
-            
+            return "Personal cards"
         default:
             return ""
         }
@@ -212,6 +164,10 @@ class MyTableViewController: UITableViewController, DatabaseListener {
     }
     
     func didNotSucceedCreateCard() {
+        // Do Nothing
+    }
+    
+    func didSearchCards(cards: [Card]) {
         // Do Nothing
     }
     

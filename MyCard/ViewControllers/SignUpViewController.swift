@@ -103,4 +103,8 @@ class SignUpViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     
+    func didSearchCards(cards: [Card]) {
+        // Do Nothing
+    }
+
 }

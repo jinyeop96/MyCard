@@ -83,4 +83,8 @@ class SignInViewController: UIViewController, DatabaseListener {
     func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
         // Do Nothing
     }
+    
+    func didSearchCards(cards: [Card]) {
+        // Do Nothing
+    }
 }

@@ -7,58 +7,86 @@
 
 import UIKit
 
-class SearchTableViewController: UITableViewController {
-
+class SearchTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener {
+    // MARK: - Properties    
+    var businessCards = [Card]()
+    var personalCards = [Card]()
+    
+    var listenerType: ListenerType = .searchCards
+    var databaseController: DatabaseProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // database controller
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        databaseController = appDelegate.databaseController
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        // Search controller
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search By Name"
+        navigationItem.searchController = searchController
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        databaseController?.addListener(listener: self)
         tabBarController?.tabBar.isHidden = false
-     
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
- 
+        databaseController?.removeListener(listener: self)
     }
 
+    
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        switch section {
+        case BUSINESS_CARD_SECTION :
+            return businessCards.count
+        case PERSONAL_CARD_SECTION:
+            return personalCards.count
+        default:
+            return 0
+        }
+    }
+    
+    // Setting Section names
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case BUSINESS_CARD_SECTION:
+            return "Business cards"
+        case PERSONAL_CARD_SECTION:
+            return "Personal cards"
+        default:
+            return ""
+        }
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+        // Helper methods are declared in UITableViewController+displayingCards file
+        if indexPath.section == BUSINESS_CARD_SECTION {
+            return assignBusinessCards(tableView: tableView, indexPath: indexPath, businessCards: businessCards)
+        } else {
+            return assignPersonalCards(tableView: tableView, indexPath: indexPath, personalCards: personalCards)
+        }
     }
-    */
+    
 
-    /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+        return false
     }
-    */
+    
 
     /*
     // Override to support editing the table view.
@@ -86,15 +114,65 @@ class SearchTableViewController: UITableViewController {
         return true
     }
     */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    // MARK: - Search result updating
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text?.lowercased() else {
+            return
+        }
+        
+        if searchText.count > 0{
+            databaseController?.searchCards(searchText: searchText)
+        }
     }
-    */
+    
+    // MARK: - Database specific methods
+    func didSearchCards(cards: [Card]){
+        businessCards.removeAll()
+        personalCards.removeAll()
+    
+        for card in cards{
+            if let isPersonal = card.isPersonal{
+                if !isPersonal {
+                    businessCards.insert(card, at: businessCards.count)
+                }
+                
+                if isPersonal {
+                    personalCards.insert(card, at: personalCards.count)
+                }
+            }
+        }
+        
+        tableView.reloadData()
+    }
+    
+    // MARK: - Unneccesary inherited methods
+    func didSucceedSignUp() {
+        // Do Nothing
+    }
+    
+    func didSucceedSignIn() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedSignUp() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedSignIn() {
+        // Do Nothing
+    }
+    
+    func didSucceedCreateCard() {
+        // Do Nothing
+    }
+    
+    func didNotSucceedCreateCard() {
+        // Do Nothing
+    }
+    
+    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+        // Do Nothing
+    }
 
 }

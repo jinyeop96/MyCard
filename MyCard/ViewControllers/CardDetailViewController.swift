@@ -36,9 +36,9 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         }
         
         // Set user details
-        if let card = card, let surname = card.surname, let givenname = card.givenname {
+        if let card = card {
             titleDetailLabel.text = card.title ?? ""
-            nameDetailLabel.text = givenname + " " + surname
+            nameDetailLabel.text = card.name ?? ""
             companyDetailLabel.text = card.companyName ?? ""
             departmentDetailLabel.text = card.department ?? ""
             addressDetailLabel.text = card.address ?? ""
@@ -111,4 +111,8 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
         // Do Nothing
     }
+    func didSearchCards(cards: [Card]) {
+        // Do Nothing
+    }
+    
 }

@@ -22,6 +22,7 @@ enum ListenerType {
     case update
     case signUp
     case signIn
+    case searchCards
 }
 
 protocol DatabaseListener: AnyObject {
@@ -33,6 +34,7 @@ protocol DatabaseListener: AnyObject {
     func didNotSucceedSignIn()
     func didSucceedCreateCard()
     func didNotSucceedCreateCard()
+    func didSearchCards(cards: [Card])
     
     func onUserCardsChanges(change: ListenerType, userCards: [Card])
 }
@@ -51,6 +53,7 @@ protocol DatabaseProtocol: AnyObject {
     // Cards
     func addCard(card: Card)
     func removeCard(card: Card)
+    func searchCards(searchText: String)
     
 
 }

@@ -909,7 +909,7 @@
             </objects>
             <point key="canvasLocation" x="3084.057971014493" y="136.60714285714286"/>
         </scene>
-        <!--Search Table View Controller-->
+        <!--Search-->
         <scene sceneID="PWh-Bm-mzO">
             <objects>
                 <tableViewController id="dW1-Rb-Q9r" customClass="SearchTableViewController" customModule="MyCard" customModuleProvider="target" sceneMemberID="viewController">
@@ -918,10 +918,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cardCell" id="Vbs-XY-fNe">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="businessCardCell" id="Vbs-XY-fNe">
                                 <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Vbs-XY-fNe" id="9e3-85-O8F">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="personalCardCell" id="RNW-6p-eV3">
+                                <rect key="frame" x="0.0" y="88" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RNW-6p-eV3" id="A5B-16-v1i">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
@@ -932,7 +940,7 @@
                             <outlet property="delegate" destination="dW1-Rb-Q9r" id="WZv-SG-aWe"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="M5D-SJ-sa0"/>
+                    <navigationItem key="navigationItem" title="Search" id="M5D-SJ-sa0"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SSL-OH-uQW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
