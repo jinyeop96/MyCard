@@ -9,13 +9,13 @@ import UIKit
 import FirebaseFirestoreSwift
 
 class User: NSObject, Codable {
-    var id: String?
+    @DocumentID var id: String?
     var title: String?
     var surname: String?
     var givenname: String?
-    var nickname: String?
     var dob: String?
     var mobile: String?
     var email: String?
     var uid: String?
+   
 }

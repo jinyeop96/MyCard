@@ -12,7 +12,6 @@ class SignUpViewController: UIViewController, DatabaseListener {
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var surnameTextField: UITextField!
     @IBOutlet weak var givennameTextField: UITextField!
-    @IBOutlet weak var nicknameTextField: UITextField!
     @IBOutlet weak var dobTextField: UITextField!
     @IBOutlet weak var mobileTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
@@ -62,7 +61,6 @@ class SignUpViewController: UIViewController, DatabaseListener {
         guard let title = titleTextField.text,
               let surname = surnameTextField.text,
               let givenname = givennameTextField.text,
-              let nickname = nicknameTextField.text,
               let dob = dobTextField.text,
               let mobile = mobileTextField.text,
               let email = emailTextField.text,
@@ -76,7 +74,6 @@ class SignUpViewController: UIViewController, DatabaseListener {
         user.title = title
         user.surname = surname
         user.givenname = givenname
-        user.nickname = nickname
         user.dob = dob
         user.mobile = mobile
         user.email = email

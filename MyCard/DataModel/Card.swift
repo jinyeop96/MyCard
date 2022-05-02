@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import FirebaseFirestoreSwift
 
 class Card: NSObject, Codable {
-    var id: String?
+    @DocumentID var id: String?
     var isPersonal: Bool?
     var title: String?
     var surname: String?
@@ -18,6 +19,6 @@ class Card: NSObject, Codable {
     var address: String?
     var mobile: String?
     var email: String?
-    var ownerNickname: String?
+    var ownerUid: String?
     
 }

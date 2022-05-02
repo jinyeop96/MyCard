@@ -16,6 +16,7 @@ enum DatabaseChange{
 enum ListenerType {
     case my
     case newCard
+    case cardDetail
     case contacts
     case all
     case update
@@ -49,6 +50,7 @@ protocol DatabaseProtocol: AnyObject {
     
     // Cards
     func addCard(card: Card)
+    func removeCard(card: Card)
     
 
 }

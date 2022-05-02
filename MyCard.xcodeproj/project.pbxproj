@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D835BE4E28186A980050B8BF /* CardDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D835BE4D28186A980050B8BF /* CardDetailViewController.swift */; };
+		D835BE5028203FF90050B8BF /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D835BE4F28203FF90050B8BF /* MapViewController.swift */; };
 		D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3A281529380040A2A2 /* AppDelegate.swift */; };
 		D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3C281529380040A2A2 /* SceneDelegate.swift */; };
 		D8C75A3F281529380040A2A2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3E281529380040A2A2 /* ViewController.swift */; };
@@ -33,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D835BE4D28186A980050B8BF /* CardDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailViewController.swift; sourceTree = "<group>"; };
+		D835BE4F28203FF90050B8BF /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		D8C75A37281529380040A2A2 /* MyCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C75A3A281529380040A2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C75A3C281529380040A2A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -116,6 +120,8 @@
 				D8C75A5E2815323D0040A2A2 /* MenuTableViewController.swift */,
 				D8C75A602815366C0040A2A2 /* NewCardViewController.swift */,
 				D8C75A6428153C4E0040A2A2 /* SignInViewController.swift */,
+				D835BE4D28186A980050B8BF /* CardDetailViewController.swift */,
+				D835BE4F28203FF90050B8BF /* MapViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -232,6 +238,8 @@
 				D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */,
 				D8C75A592815321D0040A2A2 /* MyTableViewController.swift in Sources */,
 				D8C75A6D281540040040A2A2 /* MulticastDelegate.swift in Sources */,
+				D835BE5028203FF90050B8BF /* MapViewController.swift in Sources */,
+				D835BE4E28186A980050B8BF /* CardDetailViewController.swift in Sources */,
 				D8C75A70281540420040A2A2 /* UIViewController+displayMessage.swift in Sources */,
 				D8C75A77281551080040A2A2 /* DatabaseProtocol.swift in Sources */,
 				D8C75A792815B2810040A2A2 /* Card.swift in Sources */,

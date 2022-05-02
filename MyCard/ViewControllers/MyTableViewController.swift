@@ -14,6 +14,8 @@ class MyTableViewController: UITableViewController, DatabaseListener {
     let BUSINESS_CARD_CELL = "businessCardCell"
     let PERSONAL_CARD_CELL = "personalCardCell"
     
+    let CARD_DETAIL_SEGUE = "cardDetailSegue"
+    
     var businessCards = [Card]()
     var personalCards = [Card]()
     
@@ -121,41 +123,27 @@ class MyTableViewController: UITableViewController, DatabaseListener {
         }
     }
     
-
-    /*
-    // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
+    
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            var card = Card()
+            if indexPath.section == BUSINESS_CARD_SECTION {
+                card = businessCards[indexPath.row]
+            } else {
+                card = personalCards[indexPath.row]
+            }
+            
+            databaseController?.removeCard(card: card)
+        }
     }
-    */
+    
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
     
     // MARK: - Database specific methods
     func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
@@ -178,6 +166,29 @@ class MyTableViewController: UITableViewController, DatabaseListener {
         tableView.reloadData()
     }
     
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == CARD_DETAIL_SEGUE {
+            let destination = segue.destination as! CardDetailViewController
+            
+            // Set card object in CardDetailViewController editable since is is navigated from 'My' section
+            destination.isEditable = true
+            
+            if let indexPath = tableView.indexPathForSelectedRow{
+                if indexPath.section == BUSINESS_CARD_SECTION {
+                    destination.card = businessCards[indexPath.row]
+                }
+                
+                if indexPath.section == PERSONAL_CARD_SECTION {
+                    destination.card = personalCards[indexPath.row]
+                }
+            }
+            
+            
+            
+        }
+    }
     
     // MARK: - Unnecessary inherited methods
     func didSucceedSignUp() {
