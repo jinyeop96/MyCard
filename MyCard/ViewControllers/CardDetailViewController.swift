@@ -14,6 +14,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     var listenerType: ListenerType = .cardDetail
     var databaseController: DatabaseProtocol?
     let MAP_SEGUE = "mapSegue"
+    let QR_CODE_GENERATION_SEGUE = "qrCodeGenerationSegue"
     
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var titleDetailLabel: UILabel!
@@ -80,8 +81,15 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == MAP_SEGUE {
-            
+            let destination = segue.destination as! MapViewController
+            destination.card = self.card
         }
+        
+        if segue.identifier == QR_CODE_GENERATION_SEGUE {
+            let destination = segue.destination as! QRCodoGenerationViewController
+            destination.card = self.card
+        }
+        
     }
     
 

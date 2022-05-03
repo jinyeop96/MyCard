@@ -88,7 +88,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eXA-vv-Eqs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1441" y="183"/>
+            <point key="canvasLocation" x="-1984" y="183"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="Rzf-YB-E87">
@@ -278,7 +278,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T7h-j9-z43" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-113.04347826086958" y="-177.45535714285714"/>
+            <point key="canvasLocation" x="-301" y="-333"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="gXI-DG-dmh">
@@ -300,7 +300,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GZN-Kv-nrb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-113" y="526"/>
+            <point key="canvasLocation" x="-301" y="526"/>
         </scene>
         <!--My Cards-->
         <scene sceneID="V68-tK-HKL">
@@ -576,6 +576,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5tK-0Q-tba"/>
+                    <connections>
+                        <outlet property="mapView" destination="EiY-oi-gdL" id="gxX-ew-Ern"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vxr-Hk-kyd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -851,7 +854,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="beX-Rk-s8e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4087" y="-959"/>
+            <point key="canvasLocation" x="4328" y="-694"/>
         </scene>
         <!--Codo Generation View Controller-->
         <scene sceneID="0mm-WU-LLu">
@@ -860,14 +863,50 @@
                     <view key="view" contentMode="scaleToFill" id="hNY-j3-a0l" customClass="QR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J09-9b-c1C">
+                                <rect key="frame" x="0.0" y="88" width="414" height="414"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="J09-9b-c1C" secondAttribute="height" multiplier="1:1" id="GJP-Si-Rus"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z2s-MT-Aob">
+                                <rect key="frame" x="20" y="522" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZVr-RA-4ai">
+                                <rect key="frame" x="20" y="563" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="URr-G1-yWQ"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="URr-G1-yWQ" firstAttribute="trailing" secondItem="z2s-MT-Aob" secondAttribute="trailing" constant="20" id="Eni-kl-tAT"/>
+                            <constraint firstItem="z2s-MT-Aob" firstAttribute="leading" secondItem="URr-G1-yWQ" secondAttribute="leading" constant="20" id="NsL-4X-edj"/>
+                            <constraint firstItem="URr-G1-yWQ" firstAttribute="trailing" secondItem="J09-9b-c1C" secondAttribute="trailing" id="Nts-oY-CpY"/>
+                            <constraint firstItem="ZVr-RA-4ai" firstAttribute="leading" secondItem="URr-G1-yWQ" secondAttribute="leading" constant="20" id="OWV-l4-Jm6"/>
+                            <constraint firstItem="URr-G1-yWQ" firstAttribute="trailing" secondItem="ZVr-RA-4ai" secondAttribute="trailing" constant="20" id="UM6-Ap-ldc"/>
+                            <constraint firstItem="z2s-MT-Aob" firstAttribute="top" secondItem="J09-9b-c1C" secondAttribute="bottom" constant="20" id="d1J-03-MtD"/>
+                            <constraint firstItem="ZVr-RA-4ai" firstAttribute="top" secondItem="z2s-MT-Aob" secondAttribute="bottom" constant="20" id="i3S-1X-Jce"/>
+                            <constraint firstItem="J09-9b-c1C" firstAttribute="top" secondItem="URr-G1-yWQ" secondAttribute="top" id="pPd-qo-s6c"/>
+                            <constraint firstItem="J09-9b-c1C" firstAttribute="leading" secondItem="URr-G1-yWQ" secondAttribute="leading" id="zo7-fJ-hEc"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="wTk-aN-XxF"/>
+                    <connections>
+                        <outlet property="emailLabel" destination="ZVr-RA-4ai" id="zQp-bs-8Wz"/>
+                        <outlet property="qrCodeImageView" destination="J09-9b-c1C" id="BcH-DB-J45"/>
+                        <outlet property="titleNameLabel" destination="z2s-MT-Aob" id="RHS-CB-xkv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U1e-2l-dnD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6041" y="526"/>
+            <point key="canvasLocation" x="6040.579710144928" y="525.66964285714289"/>
         </scene>
         <!--Menu Table View Controller-->
         <scene sceneID="mqI-Fy-yKs">
@@ -964,11 +1003,50 @@
                             <outlet property="delegate" destination="dW1-Rb-Q9r" id="WZv-SG-aWe"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Search" id="M5D-SJ-sa0"/>
+                    <navigationItem key="navigationItem" title="Search" id="M5D-SJ-sa0">
+                        <barButtonItem key="rightBarButtonItem" systemItem="camera" id="gly-en-quj">
+                            <connections>
+                                <segue destination="Daj-ps-vQf" kind="show" identifier="scannerSegue" id="N0H-Qg-k4o"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SSL-OH-uQW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3084.057971014493" y="900.66964285714278"/>
+        </scene>
+        <!--Scanner View Controller-->
+        <scene sceneID="NRe-Gg-pGE">
+            <objects>
+                <viewController id="Daj-ps-vQf" customClass="ScannerViewController" customModule="MyCard" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AWj-Ze-jLn">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KZA-td-2GP">
+                                <rect key="frame" x="40" y="128" width="334" height="334"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="KZA-td-2GP" secondAttribute="height" multiplier="1:1" id="h62-EQ-Xxx"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="fCp-uN-uXx"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="KZA-td-2GP" firstAttribute="leading" secondItem="fCp-uN-uXx" secondAttribute="leading" constant="40" id="4vq-V9-T6C"/>
+                            <constraint firstItem="fCp-uN-uXx" firstAttribute="trailing" secondItem="KZA-td-2GP" secondAttribute="trailing" constant="40" id="jja-Ja-9dl"/>
+                            <constraint firstItem="KZA-td-2GP" firstAttribute="top" secondItem="fCp-uN-uXx" secondAttribute="top" constant="40" id="nPw-TJ-gss"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="2dL-nb-UQu"/>
+                    <connections>
+                        <outlet property="previewView" destination="KZA-td-2GP" id="yM3-Px-3Zz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nmF-2J-44w" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4482.608695652174" y="900.66964285714278"/>
         </scene>
         <!--Contacts-->
         <scene sceneID="Gfr-p6-QM7">
@@ -1025,7 +1103,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n84-7v-7gx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1586.9565217391305" y="900.66964285714278"/>
+            <point key="canvasLocation" x="1587" y="901"/>
         </scene>
         <!--Menu-->
         <scene sceneID="HVX-wm-evl">
@@ -1062,7 +1140,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="leY-dI-MC6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2597" y="183"/>
+            <point key="canvasLocation" x="-2919" y="183"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

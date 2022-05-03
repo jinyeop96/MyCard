@@ -7,37 +7,53 @@
 
 import UIKit
 import MapKit
+import FirebaseFirestoreSwift
 
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Properties
-    let address: String? = nil
+    var card: Card? = nil
     var locationManager: CLLocationManager = CLLocationManager()
+    @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Map setting
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        locationManager.distanceFilter = 10
-        locationManager.delegate = self
         
-        let authorisationStatus = locationManager.authorizationStatus
-        if authorisationStatus != .authorizedWhenInUse {
-            if authorisationStatus == .notDetermined {
-                locationManager.requestWhenInUseAuthorization()
-            }
-        }
+        // Zoom into the card address
+        focusMap()
     }
     
+    // MARK: - View specific methods
+    private func focusMap(){
+        if let card = card, let address = card.address, let companyName = card.companyName {
+            // 1. Set search request with card's address
+            let request = MKLocalSearch.Request()
+            request.naturalLanguageQuery = address
+            request.region = mapView.region
+            let search = MKLocalSearch(request: request)
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+            search.start { response, error in
+                guard let response = response, error == nil else {
+                    self.displayMessage(title: "Error", message: "The address for this card cannot be found.")
+                    return
+                }
+                
+                // 2. If the response has result found, display the first item
+                // coordinate contains latitude and longitude
+                if let coordinate = response.mapItems.first?.placemark.coordinate{
+                    let annotation = LocationAnnotation(coordinate: coordinate, title: companyName)
+                    
+                    // annotation should be added for displaying the marker
+                    self.mapView.addAnnotation(annotation)
+                    self.mapView.selectAnnotation(annotation, animated: true)
+                    
+                    // if the map is focused elsewhere it will not be visible. So zoom in on a specific region and centre it on screen
+                    let zoomRegion = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                    self.mapView.setRegion(zoomRegion, animated: true)
+                }
+                
+            }
+        
+        }
     }
-    */
 
 }
