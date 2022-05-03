@@ -23,6 +23,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     @IBOutlet weak var addressDetailLabel: UILabel!
     @IBOutlet weak var mobileDetailLabel: UILabel!
     @IBOutlet weak var emailDetailLabel: UILabel!
+    @IBOutlet weak var generateQRButton: UIButton!
     
 
     // MARK: - On view loads
@@ -33,6 +34,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         
         if !isEditable {
             navigationItem.rightBarButtonItem = nil
+            generateQRButton.isHidden = true
         }
         
         // Set user details

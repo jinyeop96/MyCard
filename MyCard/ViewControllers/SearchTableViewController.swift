@@ -8,7 +8,8 @@
 import UIKit
 
 class SearchTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener {
-    // MARK: - Properties    
+    // MARK: - Properties
+    let CARD_DETAIL_SEGUE = "cardDetailSegue"
     var businessCards = [Card]()
     var personalCards = [Card]()
     
@@ -144,6 +145,27 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
         }
         
         tableView.reloadData()
+    }
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == CARD_DETAIL_SEGUE {
+            
+            let destination = segue.destination as! CardDetailViewController
+            destination.isEditable = false
+            
+            if let indexPath = tableView.indexPathForSelectedRow {
+                if indexPath.section == BUSINESS_CARD_SECTION {
+                    destination.card = businessCards[indexPath.row]
+                }
+                
+                if indexPath.section == PERSONAL_CARD_SECTION {
+                    destination.card = personalCards[indexPath.row]
+                    
+                }
+            }
+            
+        }
     }
     
     // MARK: - Unneccesary inherited methods

@@ -133,38 +133,24 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     func searchCards(searchText: String){
-        cardsRef?.whereField("nameLowercased", isEqualTo: searchText).getDocuments{(querySnapshot, error) in
-            guard let querySnapshot = querySnapshot, error == nil else {
-                if let error = error {
-                    print("Error fetching cards: \(error)")
-                }
-                return
-            }
+        // Filter out searched cards out of allCards list
+        var filteredCards = allCards.filter( { card in
+            return card.nameLowercased?.contains(searchText) ?? false
+        })
+        
+        // Filter out user's own cards
+        filteredCards = filteredCards.filter({ card in
+            return card.ownerUid != currentUser?.uid
+        })
+        
             
-            // Parse retrieved cards snapshots to Card objects.
-            var cards = [Card]()
-            for card in querySnapshot.documents {
-                var parsedCard: Card?
-                do {
-                    parsedCard = try card.data(as: Card.self)   // parse
-                    
-                    if let parsedCard = parsedCard {
-                        cards.insert(parsedCard, at: cards.count)
-                    }
-                    
-                } catch {
-                    print(error)
-                }
-                
-            }
-            
-            // Pass parsed card objects back to serach table view controller
-            self.listeners.invoke{ (listener) in
-                if listener.listenerType == .searchCards {
-                    listener.didSearchCards(cards: cards)
-                }
+        // Pass parsed card objects back to serach table view controller
+        self.listeners.invoke{ (listener) in
+            if listener.listenerType == .searchCards {
+                listener.didSearchCards(cards: filteredCards)
             }
         }
+        
     }
     
     
@@ -226,26 +212,35 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     private func setUpCardsListener(uid: String?) {
-        if let uid = uid {
-            cardsRef?.whereField("ownerUid", isEqualTo: uid).addSnapshotListener{ (querySnapshot, error ) in
-
-                guard let querySnapshot = querySnapshot else {
-                    print("Failed to fetch documents with error: \(String(describing: error))")
-                    return
-                }
-
-                
-                self.parseCardsSnapshot(snapshot: querySnapshot)
-                
-                
+//        if let uid = uid {
+//            cardsRef?.whereField("ownerUid", isEqualTo: uid).addSnapshotListener{ (querySnapshot, error ) in
+//
+//                guard let querySnapshot = querySnapshot else {
+//                    print("Failed to fetch documents with error: \(String(describing: error))")
+//                    return
+//                }
+//
+//                self.parseCardsSnapshot(snapshot: querySnapshot)
+//
+//
+//            }
+//        }
+        
+        // Retrieves all card documents
+        cardsRef?.addSnapshotListener { (querySnapshot, error) in
+            guard let querySnapshot = querySnapshot else {
+                print("Failed to fetch documents with error: \(String(describing: error))")
+                return
             }
+
+            self.parseCardsSnapshot(snapshot: querySnapshot)
         }
         
     }
     
     private func parseCardsSnapshot(snapshot: QuerySnapshot){
         var parsedCard: Card?
-
+        
         snapshot.documentChanges.forEach{ (change) in
 
             // 1. For each document, parse into card object
@@ -261,13 +256,29 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 return
             }
             
+            // Assign cards into allCards
             if change.type == .added {
-                userCards.insert(card, at: Int(change.newIndex))
+                //allCards.insert(card, at: Int(change.newIndex))
+                allCards.append(card)
             } else if change.type == .modified {
-                userCards[Int(change.oldIndex)] = card
+                allCards[Int(change.oldIndex)] = card
             } else if change.type == .removed {
-                userCards.remove(at: Int(change.oldIndex))
+                allCards.remove(at: Int(change.oldIndex))
             }
+            
+            
+            // Assign cards into userCards
+            if let uid = currentUser?.uid, card.ownerUid == uid {
+                if change.type == .added {
+                    //userCards.insert(card, at: Int(change.newIndex))
+                    userCards.append(card)
+                } else if change.type == .modified {
+                    userCards[Int(change.oldIndex)] = card
+                } else if change.type == .removed {
+                    userCards.remove(at: Int(change.oldIndex))
+                }
+            }
+            
             
         } // forEach ends
         

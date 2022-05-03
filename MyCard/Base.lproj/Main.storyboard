@@ -474,6 +474,7 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Generate QR code"/>
                                 <connections>
                                     <action selector="didTouchGenerateQRButton:" destination="WHW-IL-CGJ" eventType="touchUpInside" id="p2T-Dp-88I"/>
+                                    <segue destination="a9q-OJ-UMi" kind="show" identifier="qrCodeGenerationSegue" id="OnS-D4-jig"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mobile : " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UI2-4u-AZg">
@@ -542,6 +543,7 @@
                         <outlet property="departmentDetailLabel" destination="9Wk-ne-ji8" id="Jc9-um-Zob"/>
                         <outlet property="editBarButton" destination="vfK-PA-2rX" id="Pa6-7V-cIu"/>
                         <outlet property="emailDetailLabel" destination="tHX-FC-cmB" id="Qmk-Qy-8uk"/>
+                        <outlet property="generateQRButton" destination="Siy-OE-Bsg" id="rDZ-xA-gFS"/>
                         <outlet property="mobileDetailLabel" destination="Rcn-gT-j9v" id="9Qp-BR-XOQ"/>
                         <outlet property="nameDetailLabel" destination="TzM-7f-NMd" id="3mh-72-hFH"/>
                         <outlet property="titleDetailLabel" destination="J7m-Tl-mIj" id="FIw-AE-M7S"/>
@@ -550,7 +552,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vrv-Tm-974" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4095.652173913044" y="-672.32142857142856"/>
+            <point key="canvasLocation" x="5038" y="137"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="7aY-l3-d2N">
@@ -577,7 +579,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vxr-Hk-kyd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5061" y="-672"/>
+            <point key="canvasLocation" x="6042" y="-191"/>
         </scene>
         <!--New Card-->
         <scene sceneID="L8v-vR-L0f">
@@ -849,7 +851,23 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="beX-Rk-s8e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3973.913043478261" y="-1535.4910714285713"/>
+            <point key="canvasLocation" x="4087" y="-959"/>
+        </scene>
+        <!--Codo Generation View Controller-->
+        <scene sceneID="0mm-WU-LLu">
+            <objects>
+                <viewController id="a9q-OJ-UMi" customClass="QRCodoGenerationViewController" customModule="MyCard" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hNY-j3-a0l" customClass="QR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="URr-G1-yWQ"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="wTk-aN-XxF"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="U1e-2l-dnD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6041" y="526"/>
         </scene>
         <!--Menu Table View Controller-->
         <scene sceneID="mqI-Fy-yKs">
@@ -925,6 +943,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="WHW-IL-CGJ" kind="show" identifier="cardDetailSegue" id="tZL-nd-msl"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="personalCardCell" id="RNW-6p-eV3">
                                 <rect key="frame" x="0.0" y="88" width="414" height="43.5"/>
@@ -933,6 +954,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="WHW-IL-CGJ" kind="show" identifier="cardDetailSegue" id="HnW-Zj-WFV"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -1042,7 +1066,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="NdI-HV-QdM"/>
+        <segue reference="HnW-Zj-WFV"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="folder" catalog="system" width="128" height="97"/>
