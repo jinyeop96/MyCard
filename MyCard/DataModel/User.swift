@@ -17,5 +17,8 @@ class User: NSObject, Codable {
     var mobile: String?
     var email: String?
     var uid: String?
+    
+    // This contains documentID of user's contact document
+    var contactId: String?
    
 }

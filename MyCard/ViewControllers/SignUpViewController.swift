@@ -46,16 +46,23 @@ class SignUpViewController: UIViewController, DatabaseListener {
     
     
     // MARK: - Database specific methods
+    
+    // This is invoked when the user successfully created a new account to be navigated Sign In view.
     func didSucceedSignUp() {
         navigationController?.popViewController(animated: true)
     }
     
+    // This is invoked when the user failed to created a new account, it will display a message.
     func didNotSucceedSignUp() {
         displayMessage(title: "Error", message: "Sign Up failed. Try again.")
     }
     
     
     // MARK: - View specific methods
+    
+    // This will be called when the uesr touches Sign Up button, it then checks whether all required fields are filled up.
+    // If so, it will assign given details in a new User object and try to create a new account with,
+    // Otherwise it will simply display a message to fill up required fields and terminate.
     @IBAction func didTouchSignUp(_ sender: UIButton) {
         // 1. Filter any invalid data
         guard let title = titleTextField.text,
@@ -106,5 +113,7 @@ class SignUpViewController: UIViewController, DatabaseListener {
     func didSearchCards(cards: [Card]) {
         // Do Nothing
     }
-
+    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+        // Do Nothing
+    }
 }

@@ -54,6 +54,10 @@ class NewCardViewController: UIViewController, DatabaseListener {
     }
     
     // MARK: - View specific methods
+    
+    // This method is invoked when the user touches 'Create Card' button.
+    // It then check whether or not all required fileds are filled.
+    // If so, it assigns user's details in a Card object, otherwise it displays appropriate message to fill the empty fields.
     @IBAction func didTouchCreateCard(_ sender: UIButton) {
         let card = Card()
         card.isPersonal = true
@@ -152,6 +156,10 @@ class NewCardViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     func didSearchCards(cards: [Card]) {
+        // Do Nothing
+    }
+    
+    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
     }
    

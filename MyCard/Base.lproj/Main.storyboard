@@ -450,6 +450,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mobile : " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UI2-4u-AZg">
+                                <rect key="frame" x="20" y="568" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email : " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r2q-4i-Vza">
                                 <rect key="frame" x="20" y="660" width="374" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -477,12 +483,14 @@
                                     <segue destination="a9q-OJ-UMi" kind="show" identifier="qrCodeGenerationSegue" id="OnS-D4-jig"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mobile : " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UI2-4u-AZg">
-                                <rect key="frame" x="20" y="568" width="374" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IsZ-TY-0o2">
+                                <rect key="frame" x="20" y="803" width="374" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Add to contact"/>
+                                <connections>
+                                    <action selector="didTouchAddToContact:" destination="WHW-IL-CGJ" eventType="touchUpInside" id="xIv-yr-3z1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="1xN-52-TYB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -508,6 +516,7 @@
                             <constraint firstItem="9Wk-ne-ji8" firstAttribute="leading" secondItem="1xN-52-TYB" secondAttribute="leading" constant="20" id="JwW-cB-6wG"/>
                             <constraint firstItem="1xN-52-TYB" firstAttribute="trailing" secondItem="YAP-vP-RQR" secondAttribute="trailing" constant="20" id="K1e-BM-f7E"/>
                             <constraint firstItem="1xN-52-TYB" firstAttribute="trailing" secondItem="J7m-Tl-mIj" secondAttribute="trailing" constant="20" id="LbQ-cq-ppO"/>
+                            <constraint firstItem="IsZ-TY-0o2" firstAttribute="leading" secondItem="1xN-52-TYB" secondAttribute="leading" constant="20" id="MZz-L4-Zsi"/>
                             <constraint firstItem="8HR-BT-gOn" firstAttribute="top" secondItem="1xN-52-TYB" secondAttribute="top" constant="20" id="Of9-iB-769"/>
                             <constraint firstItem="1xN-52-TYB" firstAttribute="trailing" secondItem="16C-Qn-Ypf" secondAttribute="trailing" constant="20" id="P2Z-WY-pD3"/>
                             <constraint firstItem="8HR-BT-gOn" firstAttribute="leading" secondItem="1xN-52-TYB" secondAttribute="leading" constant="20" id="QZq-57-SnR"/>
@@ -522,9 +531,11 @@
                             <constraint firstItem="1xN-52-TYB" firstAttribute="trailing" secondItem="8HR-BT-gOn" secondAttribute="trailing" constant="20" id="ey9-gT-jUN"/>
                             <constraint firstItem="J7m-Tl-mIj" firstAttribute="leading" secondItem="1xN-52-TYB" secondAttribute="leading" constant="20" id="g58-ao-CFI"/>
                             <constraint firstItem="Siy-OE-Bsg" firstAttribute="leading" secondItem="1xN-52-TYB" secondAttribute="leading" constant="20" id="gGk-Rb-ota"/>
+                            <constraint firstItem="IsZ-TY-0o2" firstAttribute="top" secondItem="Siy-OE-Bsg" secondAttribute="bottom" constant="20" id="hha-qL-Gxa"/>
                             <constraint firstItem="J4Y-kS-Vi0" firstAttribute="leading" secondItem="1xN-52-TYB" secondAttribute="leading" constant="20" id="jpb-rB-vNQ"/>
                             <constraint firstItem="YAP-vP-RQR" firstAttribute="leading" secondItem="1xN-52-TYB" secondAttribute="leading" constant="20" id="lvM-KK-rZv"/>
                             <constraint firstItem="fFs-aM-nFj" firstAttribute="top" secondItem="J4Y-kS-Vi0" secondAttribute="bottom" constant="20" id="mp9-r7-b1o"/>
+                            <constraint firstItem="1xN-52-TYB" firstAttribute="trailing" secondItem="IsZ-TY-0o2" secondAttribute="trailing" constant="20" id="oYA-8v-tcI"/>
                             <constraint firstItem="TzM-7f-NMd" firstAttribute="top" secondItem="L6q-Ka-cQT" secondAttribute="bottom" constant="20" id="qez-74-Sus"/>
                             <constraint firstItem="1xN-52-TYB" firstAttribute="trailing" secondItem="L6q-Ka-cQT" secondAttribute="trailing" constant="20" id="quC-TD-gIi"/>
                             <constraint firstItem="1xN-52-TYB" firstAttribute="trailing" secondItem="9Wk-ne-ji8" secondAttribute="trailing" constant="20" id="rR1-oD-IsS"/>
@@ -538,6 +549,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="vfK-PA-2rX"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="addToContactButton" destination="IsZ-TY-0o2" id="SkZ-v0-QJd"/>
                         <outlet property="addressDetailLabel" destination="fFs-aM-nFj" id="nxw-CA-YHo"/>
                         <outlet property="companyDetailLabel" destination="YAP-vP-RQR" id="KDr-gS-xIW"/>
                         <outlet property="departmentDetailLabel" destination="9Wk-ne-ji8" id="Jc9-um-Zob"/>
@@ -946,13 +958,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cardCell" id="yUf-Ni-NBB">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="businessCardCell" id="yUf-Ni-NBB">
                                 <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yUf-Ni-NBB" id="SHP-tU-dIj">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="WHW-IL-CGJ" kind="show" identifier="cardDetailSegue" id="nAx-6H-V4c"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="personalCardCell" id="RsM-0N-2rP">
+                                <rect key="frame" x="0.0" y="88" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RsM-0N-2rP" id="Gkd-BE-Yza">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="WHW-IL-CGJ" kind="show" identifier="cardDetailSegue" id="fSW-Td-QMV"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

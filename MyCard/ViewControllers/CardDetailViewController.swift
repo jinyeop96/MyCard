@@ -11,6 +11,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     // MARK: - Properties
     var card: Card?
     var isEditable = false; // set true segued from 'My' Section only
+    var isAddable = false;
     var listenerType: ListenerType = .cardDetail
     var databaseController: DatabaseProtocol?
     let MAP_SEGUE = "mapSegue"
@@ -25,8 +26,8 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     @IBOutlet weak var mobileDetailLabel: UILabel!
     @IBOutlet weak var emailDetailLabel: UILabel!
     @IBOutlet weak var generateQRButton: UIButton!
+    @IBOutlet weak var addToContactButton: UIButton!
     
-
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +37,10 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         if !isEditable {
             navigationItem.rightBarButtonItem = nil
             generateQRButton.isHidden = true
+        }
+        
+        if !isAddable {
+            addToContactButton.isHidden = true
         }
         
         // Set user details
@@ -76,6 +81,15 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     @IBAction func tapFunction(sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: MAP_SEGUE, sender: self)
     }
+    
+    @IBAction func didTouchAddToContact(_ sender: Any) {
+        // Provide this card's documentID to the database controller for adding it to the contacts list
+        if let documentId = card?.id{
+            databaseController?.addToContact(documentId: documentId)
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
     
     
     // MARK: - Navigation
@@ -124,5 +138,8 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     func didSearchCards(cards: [Card]) {
         // Do Nothing
     }
-    
+    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+        // Do Nothing
+    }
+
 }

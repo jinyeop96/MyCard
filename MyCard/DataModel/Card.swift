@@ -13,7 +13,9 @@ class Card: NSObject, Codable {
     var isPersonal: Bool?
     var title: String?
     var name: String?
-    var nameLowercased: String? // This is used for searching 
+    
+    // This is used for searching
+    var nameLowercased: String?
     var companyName: String?
     var department: String?
     var address: String?

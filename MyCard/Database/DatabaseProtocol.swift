@@ -37,6 +37,7 @@ protocol DatabaseListener: AnyObject {
     func didSearchCards(cards: [Card])
     
     func onUserCardsChanges(change: ListenerType, userCards: [Card])
+    func onContactCardsChange(change: ListenerType, contactCards: [Card])
 }
 
 protocol DatabaseProtocol: AnyObject {
@@ -54,6 +55,7 @@ protocol DatabaseProtocol: AnyObject {
     func addCard(card: Card)
     func removeCard(card: Card)
     func searchCards(searchText: String)
+    func addToContact(documentId: String)
     
 
 }

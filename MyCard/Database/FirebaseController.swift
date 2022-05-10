@@ -20,9 +20,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var currentUser: User?
     var usersRef: CollectionReference?
     var cardsRef: CollectionReference?
+    var contactsRef: CollectionReference?
     
     var userCards: [Card]
     var allCards: [Card]
+    var contactsCards: [Card]
     
     override init(){
         FirebaseApp.configure() // must first call the configure method of FirebaseApp
@@ -30,6 +32,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         database = Firestore.firestore()
         userCards = [Card]()
         allCards = [Card]()
+        contactsCards = [Card]()
         
         super.init()
         
@@ -37,6 +40,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         // Signing up will immediately proceed to adding user details to the database.
         usersRef = database.collection("users")
         cardsRef = database.collection("cards")
+        contactsRef = database.collection("contacts")
     }
     
     // MARK: - DatabaseProtocol specific methods
@@ -45,6 +49,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
         if listener.listenerType == .my {
             alertListener(listenerType: .my, successful: true)
+        }
+        
+        if listener.listenerType == .contacts {
+            alertListener(listenerType: .contacts, successful: true)
         }
     }
     
@@ -57,10 +65,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
     func signUp(user: User, email: String, password: String) {
         Task{
             do {
-                // 1. Try creating a new account and set uid
+                // 1. Try creating a new account
                 let authResut = try await authController.createUser(withEmail: email, password: password)
                 
+                // 2. Try creating a new contact document for this user
+                let contact = Contact()
+                let contactRef = try contactsRef?.addDocument(from: contact)
+                
                 user.uid = authResut.user.uid
+                user.contactId = contactRef?.documentID
                 
                 let _ = try usersRef?.addDocument(from: user)
                
@@ -111,10 +124,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
     // MARK: - Documents sources methods
     func addCard(card: Card) {
         do {
+            // Assign owner(current user) 's UID for input card, then add it into Cards collection
             card.ownerUid = currentUser?.uid ?? ""
-            if let cardRef = try cardsRef?.addDocument(from: card){
-                card.id = cardRef.documentID
-            }
+            let _ = try cardsRef?.addDocument(from: card)
             
             alertListener(listenerType: .newCard, successful: true)
         } catch {
@@ -153,6 +165,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
     }
     
+    func addToContact(documentId: String) {
+        // 1. Check given document id exists in collection
+        if let cardRef = cardsRef?.document(documentId), let userContactId = currentUser?.contactId {
+            contactsRef?.document(userContactId).updateData(["contacts" : FieldValue.arrayUnion([cardRef])])
+            
+            setUpContactsListener()
+        }
+    }
     
     // MARK: - FirebaseController specific methods
     private func alertListener(listenerType: ListenerType, successful: Bool){
@@ -184,6 +204,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
             if listenerType == .my && successful{
                 listener.onUserCardsChanges(change: .update, userCards: userCards)
             }
+            
+            if listenerType == .contacts && successful{
+                listener.onContactCardsChange(change: .update, contactCards: contactsCards)
+            }
         }
     }
     
@@ -205,6 +229,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         // Parse user snapshot
         currentUser = User()
         do {
+            // 1. Set it as current user
             currentUser = try snapshot.data(as: User.self)
         } catch {
             print(error)
@@ -212,20 +237,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     private func setUpCardsListener(uid: String?) {
-//        if let uid = uid {
-//            cardsRef?.whereField("ownerUid", isEqualTo: uid).addSnapshotListener{ (querySnapshot, error ) in
-//
-//                guard let querySnapshot = querySnapshot else {
-//                    print("Failed to fetch documents with error: \(String(describing: error))")
-//                    return
-//                }
-//
-//                self.parseCardsSnapshot(snapshot: querySnapshot)
-//
-//
-//            }
-//        }
-        
         // Retrieves all card documents
         cardsRef?.addSnapshotListener { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot else {
@@ -282,6 +293,45 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
         } // forEach ends
         
+        // After having user's card and all cards, also get cards in contact
+        setUpContactsListener()
         self.alertListener(listenerType: .my, successful: true)
+    }
+    
+    private func setUpContactsListener(){
+        if let contactId = currentUser?.contactId{
+            contactsRef?.document(contactId).addSnapshotListener{ querySnapshot, error in
+                guard let querySnapshot = querySnapshot, error == nil else {
+                    print("Failed to fetch documents with error: \(String(describing: error))")
+                    return
+                }
+                
+                self.parseContactsSnapshot(snapshot: querySnapshot)
+            }
+        }
+        
+    }
+    
+    private func parseContactsSnapshot(snapshot: DocumentSnapshot){
+        contactsCards.removeAll()
+        
+        if let contacts = snapshot.data()?["contacts"] as? [DocumentReference]{
+            for contact in contacts {
+                if let card = getCardById(id: contact.documentID) {
+                    contactsCards.append(card)
+                }
+            }
+        }
+        self.alertListener(listenerType: .contacts, successful: true)
+    }
+    
+    private func getCardById(id: String) -> Card?{
+        for card in allCards {
+            if let cardId = card.id, cardId == id{
+                return card
+            }
+        }
+        
+        return nil
     }
 }

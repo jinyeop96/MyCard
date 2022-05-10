@@ -171,6 +171,10 @@ class MyTableViewController: UITableViewController, DatabaseListener {
         // Do Nothing
     }
     
+    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+        // Do Nothing
+    }
+    
 
 
 }
