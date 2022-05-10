@@ -42,8 +42,6 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
-        businessCards.removeAll()
-        personalCards.removeAll()
     }
 
     
@@ -133,6 +131,9 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     
     // MARK: - Database specific methods
     func didSearchCards(cards: [Card]){
+        businessCards.removeAll()
+        personalCards.removeAll()
+        
         for card in cards{
             if let isPersonal = card.isPersonal{
                 if !isPersonal {
@@ -153,6 +154,7 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
         if segue.identifier == CARD_DETAIL_SEGUE {
             
             let destination = segue.destination as! CardDetailViewController
+            destination.isEditable = false
             destination.isAddable = true
             
             if let indexPath = tableView.indexPathForSelectedRow {

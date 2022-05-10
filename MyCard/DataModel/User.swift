@@ -20,5 +20,6 @@ class User: NSObject, Codable {
     
     // This contains documentID of user's contact document
     var contactId: String?
+    var individualCardId: String?
    
 }

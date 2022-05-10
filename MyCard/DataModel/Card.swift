@@ -21,6 +21,4 @@ class Card: NSObject, Codable {
     var address: String?
     var mobile: String?
     var email: String?
-    var ownerUid: String?
-    
 }

@@ -126,6 +126,7 @@ class MyTableViewController: UITableViewController, DatabaseListener {
             
             // Set card object in CardDetailViewController editable since is is navigated from 'My' section
             destination.isEditable = true
+            destination.isAddable = false
             
             if let indexPath = tableView.indexPathForSelectedRow{
                 if indexPath.section == BUSINESS_CARD_SECTION {

@@ -21,7 +21,6 @@ class ContactsTableViewController: UITableViewController, DatabaseListener {
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
-
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         databaseController = appDelegate.databaseController
     }
@@ -35,9 +34,6 @@ class ContactsTableViewController: UITableViewController, DatabaseListener {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
-        businessCards.removeAll()
-        personalCards.removeAll()
-
     }
     
     
@@ -81,13 +77,28 @@ class ContactsTableViewController: UITableViewController, DatabaseListener {
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
     
-    // MARK: - Database specific methods
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            var card = Card()
+            
+            if indexPath.section == BUSINESS_CARD_SECTION {
+                card = businessCards[indexPath.row]
+            } else {
+                card = personalCards[indexPath.row]
+            }
+            
+            databaseController?.removeFromContact(card: card)
+        }
+    }
     
+    // MARK: - Database specific methods
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+        businessCards.removeAll()
+        personalCards.removeAll()
+        
         for card in contactCards {
             if let isPersonal = card.isPersonal {
                 if isPersonal {
@@ -110,6 +121,8 @@ class ContactsTableViewController: UITableViewController, DatabaseListener {
             if segue.identifier == CARD_DETAIL_SEGUE {
                 
                 let destination = segue.destination as! CardDetailViewController
+                destination.isEditable = false
+                destination.isAddable = false
         
                 if let indexPath = tableView.indexPathForSelectedRow {
                     if indexPath.section == BUSINESS_CARD_SECTION {

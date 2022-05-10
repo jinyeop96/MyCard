@@ -68,8 +68,8 @@ extension UITableViewController{
             content.text = name
         }
         
-        if let email = personalCard.email{
-            content.secondaryText = email
+        if let address = personalCard.address{
+            content.secondaryText = address
         }
         
         personalCardCell.contentConfiguration = content

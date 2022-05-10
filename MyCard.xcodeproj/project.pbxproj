@@ -14,6 +14,7 @@
 		D835BE57282153C20050B8BF /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D835BE56282153C20050B8BF /* ScannerViewController.swift */; };
 		D835BE5A28216F890050B8BF /* LocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D835BE5928216F890050B8BF /* LocationAnnotation.swift */; };
 		D835BE5C282969A60050B8BF /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = D835BE5B282969A60050B8BF /* Contact.swift */; };
+		D8C39522282A5ABB002EFAF0 /* Individual.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39521282A5ABB002EFAF0 /* Individual.swift */; };
 		D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3A281529380040A2A2 /* AppDelegate.swift */; };
 		D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3C281529380040A2A2 /* SceneDelegate.swift */; };
 		D8C75A42281529380040A2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C75A40281529380040A2A2 /* Main.storyboard */; };
@@ -46,6 +47,7 @@
 		D835BE56282153C20050B8BF /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		D835BE5928216F890050B8BF /* LocationAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAnnotation.swift; sourceTree = "<group>"; };
 		D835BE5B282969A60050B8BF /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		D8C39521282A5ABB002EFAF0 /* Individual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Individual.swift; sourceTree = "<group>"; };
 		D8C75A37281529380040A2A2 /* MyCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C75A3A281529380040A2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C75A3C281529380040A2A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				D8C75A72281540890040A2A2 /* User.swift */,
 				D8C75A782815B2810040A2A2 /* Card.swift */,
 				D835BE5B282969A60050B8BF /* Contact.swift */,
+				D8C39521282A5ABB002EFAF0 /* Individual.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				D8C75A6728153C570040A2A2 /* SignUpViewController.swift in Sources */,
 				D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */,
 				D8C75A6528153C4E0040A2A2 /* SignInViewController.swift in Sources */,
+				D8C39522282A5ABB002EFAF0 /* Individual.swift in Sources */,
 				D8D7B8632817E9280073A97B /* FirebaseController.swift in Sources */,
 				D835BE5A28216F890050B8BF /* LocationAnnotation.swift in Sources */,
 				D8C75A5B281532290040A2A2 /* ContactsTableViewController.swift in Sources */,

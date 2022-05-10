@@ -55,7 +55,8 @@ protocol DatabaseProtocol: AnyObject {
     func addCard(card: Card)
     func removeCard(card: Card)
     func searchCards(searchText: String)
-    func addToContact(documentId: String)
+    func addToContact(card: Card)
+    func removeFromContact(card: Card)
     
 
 }

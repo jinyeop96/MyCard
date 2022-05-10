@@ -18,15 +18,13 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     let QR_CODE_GENERATION_SEGUE = "qrCodeGenerationSegue"
     
     @IBOutlet weak var editBarButton: UIBarButtonItem!
-    @IBOutlet weak var titleDetailLabel: UILabel!
-    @IBOutlet weak var nameDetailLabel: UILabel!
-    @IBOutlet weak var companyDetailLabel: UILabel!
-    @IBOutlet weak var departmentDetailLabel: UILabel!
-    @IBOutlet weak var addressDetailLabel: UILabel!
-    @IBOutlet weak var mobileDetailLabel: UILabel!
-    @IBOutlet weak var emailDetailLabel: UILabel!
-    @IBOutlet weak var generateQRButton: UIButton!
-    @IBOutlet weak var addToContactButton: UIButton!
+    @IBOutlet weak var titleNameLabel: UILabel!
+    @IBOutlet weak var companyNameLabel: UILabel!
+    @IBOutlet weak var departmentNameLabel: UILabel!
+    @IBOutlet weak var addressLabel: UILabel!
+    @IBOutlet weak var emailLabel: UILabel!
+    @IBOutlet weak var mobileLabel: UILabel!
+    @IBOutlet weak var optionButton: UIButton!
     
     // MARK: - On view loads
     override func viewDidLoad() {
@@ -34,30 +32,42 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         databaseController = appDelegate.databaseController
         
-        if !isEditable {
-            navigationItem.rightBarButtonItem = nil
-            generateQRButton.isHidden = true
+        // Accessed from owner
+        if isEditable {
+            
+            optionButton.setTitle("Generate QR Code", for: .normal)
         }
         
-        if !isAddable {
-            addToContactButton.isHidden = true
+        // Accessed from others but searching
+        if isAddable {
+            optionButton.setTitle("Add to Contact", for: .normal)
+            navigationItem.rightBarButtonItem = nil
+        }
+        
+        // Accessed from others
+        if !isEditable && !isAddable {
+            optionButton.isHidden = true
+            navigationItem.rightBarButtonItem = nil
         }
         
         // Set user details
-        if let card = card {
-            titleDetailLabel.text = card.title ?? ""
-            nameDetailLabel.text = card.name ?? ""
-            companyDetailLabel.text = card.companyName ?? ""
-            departmentDetailLabel.text = card.department ?? ""
-            addressDetailLabel.text = card.address ?? ""
-            mobileDetailLabel.text = card.mobile ?? ""
-            emailDetailLabel.text = card.email ?? ""
+        if let card = card, let title = card.title, let name = card.name{
+            titleNameLabel.text = title + ". " + name
+            companyNameLabel.text = card.companyName ?? ""
+            departmentNameLabel.text = card.department ?? ""
+            addressLabel.text = card.address ?? ""
+            emailLabel.text = card.email ?? ""
+            mobileLabel.text = card.mobile ?? ""
+            
         }
         
-        // Let adderss detail touchable
+        // Let adderss and company name detail touchable
         let tap = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.tapFunction))
-        addressDetailLabel.isUserInteractionEnabled = true
-        addressDetailLabel.addGestureRecognizer(tap)
+        addressLabel.isUserInteractionEnabled = true
+        addressLabel.addGestureRecognizer(tap)
+        
+//        companyNameLabel.isUserInteractionEnabled = true
+//        companyNameLabel.addGestureRecognizer(tap)
         
     }
     
@@ -70,24 +80,25 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
-        isEditable = false;
     }
 
     
     //MARK: - This view specific methods
-    @IBAction func didTouchGenerateQRButton(_ sender: Any) {
-    }
-    
     @IBAction func tapFunction(sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: MAP_SEGUE, sender: self)
     }
     
-    @IBAction func didTouchAddToContact(_ sender: Any) {
-        // Provide this card's documentID to the database controller for adding it to the contacts list
-        if let documentId = card?.id{
-            databaseController?.addToContact(documentId: documentId)
+    @IBAction func didTouchOptionButton(_ sender: Any) {
+        // editable means the user is viewing the card, so it can generate the QR code
+        if isEditable {
+            performSegue(withIdentifier: QR_CODE_GENERATION_SEGUE, sender: self)
         }
-        navigationController?.popViewController(animated: true)
+        
+        if isAddable, let card = card{
+            databaseController?.addToContact(card: card)
+            
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     
