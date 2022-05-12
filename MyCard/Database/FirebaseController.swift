@@ -191,6 +191,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
     }
     
+    
     // MARK: - FirebaseController specific methods
     private func alertListener(listenerType: ListenerType, successful: Bool){
         listeners.invoke { (listener) in
@@ -354,19 +355,19 @@ class FirebaseController: NSObject, DatabaseProtocol {
         } // if-let ends
     }
     
-    // This looks for the whether there is same a card documentId in all cards we have.
+    // This checks whether given card id exists
     // If so, it returns the card object, else nil
-    private func getCardById(id: String) -> Card?{
+    func getCardById(id: String) -> Card?{
         for card in allCards {
             if let cardId = card.id, cardId == id{
                 return card
             }
         }
         
-        // If not found, target id is removed from cards collection
-        if let contactId = currentUser?.contactId, let cardRef = cardsRef?.document(id) {
-            contactsRef?.document(contactId).updateData(["contactCardIds" : FieldValue.arrayRemove([cardRef])])
-        }
+//        // If not found, target id is removed from cards collection
+//        if let contactId = currentUser?.contactId, let cardRef = cardsRef?.document(id) {
+//            contactsRef?.document(contactId).updateData(["contactCardIds" : FieldValue.arrayRemove([cardRef])])
+//        }
         
         return nil
     }

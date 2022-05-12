@@ -475,6 +475,7 @@
                         <outlet property="titleNameLabel" destination="J7m-Tl-mIj" id="KrC-Ja-7dn"/>
                         <segue destination="Hr8-ha-3Du" kind="show" identifier="mapSegue" id="8sg-b7-8hK"/>
                         <segue destination="a9q-OJ-UMi" kind="show" identifier="qrCodeGenerationSegue" id="2vL-Dp-jgK"/>
+                        <segue destination="DwU-uW-8WG" kind="show" identifier="companyInfoSegue" id="9yr-Q7-da5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vrv-Tm-974" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -835,6 +836,22 @@
             </objects>
             <point key="canvasLocation" x="6040.579710144928" y="525.66964285714289"/>
         </scene>
+        <!--Company Information View Controller-->
+        <scene sceneID="QoI-pw-CVs">
+            <objects>
+                <viewController id="DwU-uW-8WG" customClass="CompanyInformationViewController" customModule="MyCard" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qfm-1G-Dfa" customClass="com">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="17v-jZ-2F8"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="5Cg-2R-H23"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H5z-7u-RpX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6920" y="137"/>
+        </scene>
         <!--Menu Table View Controller-->
         <scene sceneID="mqI-Fy-yKs">
             <objects>
@@ -963,27 +980,10 @@
                     <view key="view" contentMode="scaleToFill" id="AWj-Ze-jLn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KZA-td-2GP">
-                                <rect key="frame" x="40" y="128" width="334" height="334"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="KZA-td-2GP" secondAttribute="height" multiplier="1:1" id="h62-EQ-Xxx"/>
-                                </constraints>
-                            </view>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="fCp-uN-uXx"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="KZA-td-2GP" firstAttribute="leading" secondItem="fCp-uN-uXx" secondAttribute="leading" constant="40" id="4vq-V9-T6C"/>
-                            <constraint firstItem="fCp-uN-uXx" firstAttribute="trailing" secondItem="KZA-td-2GP" secondAttribute="trailing" constant="40" id="jja-Ja-9dl"/>
-                            <constraint firstItem="KZA-td-2GP" firstAttribute="top" secondItem="fCp-uN-uXx" secondAttribute="top" constant="40" id="nPw-TJ-gss"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2dL-nb-UQu"/>
-                    <connections>
-                        <outlet property="previewView" destination="KZA-td-2GP" id="yM3-Px-3Zz"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nmF-2J-44w" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

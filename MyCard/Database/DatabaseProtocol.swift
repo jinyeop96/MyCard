@@ -23,6 +23,7 @@ enum ListenerType {
     case signUp
     case signIn
     case searchCards
+    case scanner
 }
 
 protocol DatabaseListener: AnyObject {

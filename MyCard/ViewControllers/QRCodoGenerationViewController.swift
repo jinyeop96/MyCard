@@ -34,8 +34,8 @@ class QRCodoGenerationViewController: UIViewController {
     }
     
     func generateQRCode() -> UIImage? {
-        if let card = card {
-            let data = card.id?.data(using: String.Encoding.ascii)
+        if let cardId = card?.id {
+            let data = cardId.data(using: String.Encoding.ascii)
             
             if let QRFilter = CIFilter(name: "CIQRCodeGenerator") {
                 QRFilter.setValue(data, forKey: "inputMessage")

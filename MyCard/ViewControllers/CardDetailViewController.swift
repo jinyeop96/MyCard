@@ -16,6 +16,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     var databaseController: DatabaseProtocol?
     let MAP_SEGUE = "mapSegue"
     let QR_CODE_GENERATION_SEGUE = "qrCodeGenerationSegue"
+    let COMPANY_INFO_SEGUE = "companyInfoSegue"
     
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var titleNameLabel: UILabel!
@@ -62,12 +63,13 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         }
         
         // Let adderss and company name detail touchable
-        let tap = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.tapFunction))
+        let toMap = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.segueToMap))
         addressLabel.isUserInteractionEnabled = true
-        addressLabel.addGestureRecognizer(tap)
+        addressLabel.addGestureRecognizer(toMap)
         
-//        companyNameLabel.isUserInteractionEnabled = true
-//        companyNameLabel.addGestureRecognizer(tap)
+        let toCompanyInfo = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.segueToCompanyInfo))
+        companyNameLabel.isUserInteractionEnabled = true
+        companyNameLabel.addGestureRecognizer(toCompanyInfo)
         
     }
     
@@ -84,8 +86,12 @@ class CardDetailViewController: UIViewController, DatabaseListener {
 
     
     //MARK: - This view specific methods
-    @IBAction func tapFunction(sender: UITapGestureRecognizer) {
+    @IBAction func segueToMap(sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: MAP_SEGUE, sender: self)
+    }
+    
+    @IBAction func segueToCompanyInfo(sender: UITapGestureRecognizer) {
+        performSegue(withIdentifier: COMPANY_INFO_SEGUE, sender: self)
     }
     
     @IBAction func didTouchOptionButton(_ sender: Any) {
@@ -115,6 +121,10 @@ class CardDetailViewController: UIViewController, DatabaseListener {
             destination.card = self.card
         }
         
+        if segue.identifier == COMPANY_INFO_SEGUE {
+            let destination = segue.destination as! CompanyInformationViewController
+            destination.card = self.card
+        }
     }
     
 
