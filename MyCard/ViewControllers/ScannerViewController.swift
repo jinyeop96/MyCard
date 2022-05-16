@@ -42,7 +42,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
     
     
+    
     // MARK: - View specific methods
+    // https://www.appcoda.com/intermediate-swift-tips/qrcode-reader.html
     private func beginQRScanning(){
         // Get the back-facing camera for capturing videos
         guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {

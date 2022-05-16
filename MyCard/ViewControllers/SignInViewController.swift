@@ -17,10 +17,21 @@ class SignInViewController: UIViewController, DatabaseListener {
     var listenerType: ListenerType = .signIn
     var databaseController: DatabaseProtocol?
     
+    var indicator = UIActivityIndicatorView()
+    
     
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Add loading indicator
+        indicator.style = UIActivityIndicatorView.Style.large
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+        ])
         
         // Get reference to the Firebase controller
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -46,6 +57,7 @@ class SignInViewController: UIViewController, DatabaseListener {
     }
     
     func didNotSucceedSignIn() {
+        indicator.stopAnimating()
         displayMessage(title: "Error", message: "Sign in failed. Try again.")
     }
 
@@ -58,6 +70,7 @@ class SignInViewController: UIViewController, DatabaseListener {
                   return
               }
         
+        indicator.startAnimating()
         databaseController?.signIn(email: email, password: password)
     }
     

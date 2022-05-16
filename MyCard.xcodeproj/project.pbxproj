@@ -15,7 +15,9 @@
 		D835BE5A28216F890050B8BF /* LocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D835BE5928216F890050B8BF /* LocationAnnotation.swift */; };
 		D835BE5C282969A60050B8BF /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = D835BE5B282969A60050B8BF /* Contact.swift */; };
 		D8C39522282A5ABB002EFAF0 /* Individual.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39521282A5ABB002EFAF0 /* Individual.swift */; };
-		D8C39524282D35DF002EFAF0 /* CompanyInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39523282D35DF002EFAF0 /* CompanyInformationViewController.swift */; };
+		D8C39526283260E2002EFAF0 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39525283260E2002EFAF0 /* Company.swift */; };
+		D8C39528283270CA002EFAF0 /* CompanyDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39527283270CA002EFAF0 /* CompanyDetailTableViewController.swift */; };
+		D8C3952E2832798F002EFAF0 /* CompanyDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3952D2832798F002EFAF0 /* CompanyDetailTableViewCell.swift */; };
 		D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3A281529380040A2A2 /* AppDelegate.swift */; };
 		D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3C281529380040A2A2 /* SceneDelegate.swift */; };
 		D8C75A42281529380040A2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C75A40281529380040A2A2 /* Main.storyboard */; };
@@ -49,7 +51,9 @@
 		D835BE5928216F890050B8BF /* LocationAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAnnotation.swift; sourceTree = "<group>"; };
 		D835BE5B282969A60050B8BF /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		D8C39521282A5ABB002EFAF0 /* Individual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Individual.swift; sourceTree = "<group>"; };
-		D8C39523282D35DF002EFAF0 /* CompanyInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyInformationViewController.swift; sourceTree = "<group>"; };
+		D8C39525283260E2002EFAF0 /* Company.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
+		D8C39527283270CA002EFAF0 /* CompanyDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDetailTableViewController.swift; sourceTree = "<group>"; };
+		D8C3952D2832798F002EFAF0 /* CompanyDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDetailTableViewCell.swift; sourceTree = "<group>"; };
 		D8C75A37281529380040A2A2 /* MyCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C75A3A281529380040A2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C75A3C281529380040A2A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +139,7 @@
 				D8C75A48281529390040A2A2 /* Info.plist */,
 				D8C75A4E28152A9C0040A2A2 /* GoogleService-Info.plist */,
 				D835BE5928216F890050B8BF /* LocationAnnotation.swift */,
+				D8C3952D2832798F002EFAF0 /* CompanyDetailTableViewCell.swift */,
 			);
 			path = MyCard;
 			sourceTree = "<group>";
@@ -142,6 +147,7 @@
 		D8C75A57281531FE0040A2A2 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				D8C39527283270CA002EFAF0 /* CompanyDetailTableViewController.swift */,
 				D8C75A582815321D0040A2A2 /* MyTableViewController.swift */,
 				D8C75A6628153C570040A2A2 /* SignUpViewController.swift */,
 				D8C75A5A281532290040A2A2 /* ContactsTableViewController.swift */,
@@ -153,7 +159,6 @@
 				D835BE4F28203FF90050B8BF /* MapViewController.swift */,
 				D835BE5428213F5B0050B8BF /* QRCodoGenerationViewController.swift */,
 				D835BE56282153C20050B8BF /* ScannerViewController.swift */,
-				D8C39523282D35DF002EFAF0 /* CompanyInformationViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -175,6 +180,7 @@
 				D8C75A782815B2810040A2A2 /* Card.swift */,
 				D835BE5B282969A60050B8BF /* Contact.swift */,
 				D8C39521282A5ABB002EFAF0 /* Individual.swift */,
+				D8C39525283260E2002EFAF0 /* Company.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -265,17 +271,19 @@
 				D8C75A5D281532330040A2A2 /* SearchTableViewController.swift in Sources */,
 				D835BE5328205C580050B8BF /* UITableViewController+displayingCards.swift in Sources */,
 				D835BE5528213F5B0050B8BF /* QRCodoGenerationViewController.swift in Sources */,
+				D8C3952E2832798F002EFAF0 /* CompanyDetailTableViewCell.swift in Sources */,
 				D835BE5C282969A60050B8BF /* Contact.swift in Sources */,
 				D835BE57282153C20050B8BF /* ScannerViewController.swift in Sources */,
+				D8C39526283260E2002EFAF0 /* Company.swift in Sources */,
 				D8C75A6728153C570040A2A2 /* SignUpViewController.swift in Sources */,
 				D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */,
 				D8C75A6528153C4E0040A2A2 /* SignInViewController.swift in Sources */,
 				D8C39522282A5ABB002EFAF0 /* Individual.swift in Sources */,
 				D8D7B8632817E9280073A97B /* FirebaseController.swift in Sources */,
-				D8C39524282D35DF002EFAF0 /* CompanyInformationViewController.swift in Sources */,
 				D835BE5A28216F890050B8BF /* LocationAnnotation.swift in Sources */,
 				D8C75A5B281532290040A2A2 /* ContactsTableViewController.swift in Sources */,
 				D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */,
+				D8C39528283270CA002EFAF0 /* CompanyDetailTableViewController.swift in Sources */,
 				D8C75A592815321D0040A2A2 /* MyTableViewController.swift in Sources */,
 				D8C75A6D281540040040A2A2 /* MulticastDelegate.swift in Sources */,
 				D835BE5028203FF90050B8BF /* MapViewController.swift in Sources */,

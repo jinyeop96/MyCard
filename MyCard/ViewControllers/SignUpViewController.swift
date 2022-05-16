@@ -20,10 +20,23 @@ class SignUpViewController: UIViewController, DatabaseListener {
     var databaseController: DatabaseProtocol?
     var listenerType: ListenerType = .signUp
     
+    var indicator = UIActivityIndicatorView()
     
     // MARK: - On view load
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+    
+        // Add loading indicator
+        indicator.style = UIActivityIndicatorView.Style.large
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+        ])
+        
+        
 
         // Get reference to the Firestore database upon the view load
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -54,6 +67,7 @@ class SignUpViewController: UIViewController, DatabaseListener {
     
     // This is invoked when the user failed to created a new account, it will display a message.
     func didNotSucceedSignUp() {
+        indicator.stopAnimating()
         displayMessage(title: "Error", message: "Sign Up failed. Try again.")
     }
     
@@ -84,6 +98,8 @@ class SignUpViewController: UIViewController, DatabaseListener {
         user.dob = dob
         user.mobile = mobile
         user.email = email
+        
+        indicator.startAnimating()
         
         databaseController?.signUp(user: user, email: email, password: password)
     }

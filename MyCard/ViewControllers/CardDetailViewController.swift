@@ -16,7 +16,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     var databaseController: DatabaseProtocol?
     let MAP_SEGUE = "mapSegue"
     let QR_CODE_GENERATION_SEGUE = "qrCodeGenerationSegue"
-    let COMPANY_INFO_SEGUE = "companyInfoSegue"
+    let COMPANY_DETAIL_SEGUE = "companyDetailSegue"
     
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var titleNameLabel: UILabel!
@@ -91,7 +91,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     }
     
     @IBAction func segueToCompanyInfo(sender: UITapGestureRecognizer) {
-        performSegue(withIdentifier: COMPANY_INFO_SEGUE, sender: self)
+        performSegue(withIdentifier: COMPANY_DETAIL_SEGUE, sender: self)
     }
     
     @IBAction func didTouchOptionButton(_ sender: Any) {
@@ -121,8 +121,8 @@ class CardDetailViewController: UIViewController, DatabaseListener {
             destination.card = self.card
         }
         
-        if segue.identifier == COMPANY_INFO_SEGUE {
-            let destination = segue.destination as! CompanyInformationViewController
+        if segue.identifier == COMPANY_DETAIL_SEGUE {
+            let destination = segue.destination as! CompanyDetailTableViewController
             destination.card = self.card
         }
     }
