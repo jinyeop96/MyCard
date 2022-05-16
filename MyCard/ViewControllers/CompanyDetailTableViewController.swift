@@ -51,8 +51,12 @@ class CompanyDetailTableViewController: UITableViewController {
         let detail = details[indexPath.row].detail
         
         cell.nameLabel.text = detail.name ?? ""
+        cell.nameLabel.numberOfLines = 0
+        
         cell.descriptionLabel.text = detail.description ?? ""
-        cell.detailedDescriptionLabel.text = detail.detailedDescription?.articleBody ?? ""
+        cell.descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        
+        cell.detailedDescriptionLabel.text = detail.detailedDescription?.articleBody ?? "No detailed description."
         cell.detailedDescriptionLabel.numberOfLines = 0
         
         return cell

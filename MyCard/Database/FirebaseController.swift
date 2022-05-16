@@ -17,11 +17,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var authController: Auth
     var database: Firestore
     
-    var currentUser: User?  // holidng signed in user's details inclduing documentID of documents in 'contacts' and 'userCards'
-    var usersRef: CollectionReference?      // reference to the users collection
-    var contactsRef: CollectionReference?   // each of documents in contacts collection holds documentIDs of card documents
-    var individualCardsRef: CollectionReference?  // each of documents in individualCards collection holds documentIDs of card documents
-    var cardsRef: CollectionReference?
+    var currentUser: User?  // Holidng signed-in user's details inclduing documentIDs of 'contacts' and 'individualCards' collection
+    var usersRef: CollectionReference?  // Reference to the 'users' collection
+    var contactsRef: CollectionReference?   // Holding document references to other users' cards
+    var individualCardsRef: CollectionReference?  // Holding document references to current user's card
+    var cardsRef: CollectionReference?  // Reference to the 'cards' collection
     
     var userCards: [Card]
     var contactsCards: [Card]
@@ -65,6 +65,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     // MARK: - Authentication
+    
+    // This function attempts to create a new account with input email and password, then it creates documents in 'users', 'contacts' and 'individualCards' collections.
     func signUp(user: User, email: String, password: String) {
         Task{
             do {
@@ -79,13 +81,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 let individualCard = Individual()
                 let individualCardRef = try individualCardsRef?.addDocument(from: individualCard)
                 
-                // 4. Add user detail
+                // 4. Add additional details, then create a document
                 user.uid = authResut.user.uid
                 user.contactId = contactRef?.documentID
                 user.individualCardId = individualCardRef?.documentID
                 
                 let _ = try usersRef?.addDocument(from: user)
                
+                // 5. Once everything is successful, alter
                 await MainActor.run{
                     alertListener(listenerType: .signUp, successful: true)
                 }
@@ -100,6 +103,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         } // Task ends
     }
     
+    // This fuction attempts to sign in with input email and password.
     func signIn(email: String, password: String) {
         Task {
             do {
@@ -130,14 +134,16 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     // MARK: - Documents sources methods
+    // This function is called only by current user for adding a new card.
+    // This create a new document in 'cards' collection, then the new document ID is stored in user's indivisual card list.
     func addCard(card: Card) {
         do {
-            // 1. Add new document in cards collection
-            let cardRef = try cardsRef?.addDocument(from: card)
+            // 1. Add a new document in 'cards' collection
+            let newCardRef = try cardsRef?.addDocument(from: card)
             
-            // 2. Update userCards collection for the current user
-            if let individualCardId = currentUser?.individualCardId, let cardRef = cardRef {
-                individualCardsRef?.document(individualCardId).updateData(["individualCardIds" : FieldValue.arrayUnion([cardRef])])
+            // 2. Add reference to the new document to user's individual card list
+            if let individualCardId = currentUser?.individualCardId, let individualCardList = individualCardsRef?.document(individualCardId), let newCardRef = newCardRef {
+                individualCardList.updateData(["individualCardIds" : FieldValue.arrayUnion([newCardRef])])
             }
             
             alertListener(listenerType: .newCard, successful: true)
@@ -146,9 +152,25 @@ class FirebaseController: NSObject, DatabaseProtocol {
         } // do-catch ends
     }
     
+    // This function removes the card ID from all referencing contact lists, owner's indivisual card list and the card itself
     func removeCard(card: Card) {
-        if let cardId = card.id {
-            cardsRef?.document(cardId).delete()
+        if let cardId = card.id, let individualCardsId = currentUser?.individualCardId, let removingCardRef = cardsRef?.document(cardId) {
+            Task {
+                do {
+                    // 1. Remove card ID from all referencing contact lists
+                    for referencingList in card.referencedBy {
+                        try await referencingList.updateData(["contactCardIds" : FieldValue.arrayRemove([removingCardRef])])
+                    }
+                    
+                    // 2. Remove the card itself from 'cards' collection
+                    try await removingCardRef.delete()
+
+                    // 3. Remove the card ID from the owner's individual card list
+                    try await individualCardsRef?.document(individualCardsId).updateData(["individualCardIds" : FieldValue.arrayRemove([removingCardRef])])
+                } catch {
+                    print(error)
+                }
+            }
         }
     }
     
@@ -173,26 +195,31 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
     }
     
+    // This function adds the input card ID to user's contact list
     func addToContact(card: Card) {
-        if let cardId = card.id {
-            // 1. Check given document id exists in collection
-            if let cardRef = cardsRef?.document(cardId), let contactId = currentUser?.contactId {
-                contactsRef?.document(contactId).updateData(["contactCardIds" : FieldValue.arrayUnion([cardRef])])
-            }
+        // 1. Check given card exists in collection
+        if let cardId = card.id, let cardRef = cardsRef?.document(cardId), let contactId = currentUser?.contactId, let userContactList = contactsRef?.document(contactId) {
+            
+            // 2. Add to current user's contact list
+            userContactList.updateData(["contactCardIds" : FieldValue.arrayUnion([cardRef])])
+            
+            // 3. Set this user as referenced user to the card
+            cardRef.updateData(["referencedBy" : FieldValue.arrayUnion([userContactList])])
         }
-        
     }
     
+    // This function removes card ID from user's contact list
     func removeFromContact(card: Card) {
-        // 1. check if the input card exists, then remove from user's contact list.
-        if let cardId = card.id, let contactId = currentUser?.contactId,
-            let cardRef = cardsRef?.document(cardId) {
-            contactsRef?.document(contactId).updateData(["contactCardIds" : FieldValue.arrayRemove([cardRef])])
+        // 1. check if the input card exists
+        if let cardId = card.id, let contactId = currentUser?.contactId, let cardRef = cardsRef?.document(cardId), let userContactList = contactsRef?.document(contactId) {
+            // 2.  remove the card ID from user's contact list.
+            userContactList.updateData(["contactCardIds" : FieldValue.arrayRemove([cardRef])])
         }
     }
     
     
     // MARK: - FirebaseController specific methods
+    // This delivers the appropriate signs to the corresponding listeners
     private func alertListener(listenerType: ListenerType, successful: Bool){
         listeners.invoke { (listener) in
             if listenerType == .signUp && successful {
@@ -244,8 +271,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 // 1. Set it as current user
                 self.currentUser = try userSnapshot.data(as: User.self)
                 
-                // 2. retrieve all cards
+                // 2. retrieve all cards, contact cards, personal cards
                 self.setUpCardsListener()
+                self.setUpContactsListener()
+                self.setUpIndividualCardsListener()
                 
             } catch {
                 print(error)
@@ -254,7 +283,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     private func setUpCardsListener() {
-    
         // Retrieves all card documents
         cardsRef?.addSnapshotListener { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot else {
@@ -269,7 +297,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     private func parseCardsSnapshot(snapshot: QuerySnapshot){
         var parsedCard: Card?
-        
+      
         snapshot.documentChanges.forEach{ (change) in
 
             // 1. For each document, parse into card object
@@ -295,10 +323,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 allCards.remove(at: Int(change.oldIndex))
             }
         } // forEach ends
-        
-        // After having user's card and all cards, also get contacts and user's cards
-        setUpContactsListener()
-        setUpIndividualCardsListener()
+
         self.alertListener(listenerType: .my, successful: true)
     }
     
@@ -314,7 +339,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 
                 // 2. If no error made, append corresponding cards
                 self.contactsCards.removeAll()
-                
+
                 if let contacts = contactsSnapshot.data()?["contactCardIds"] as? [DocumentReference]{
                     for contact in contacts {
                         if let card = self.getCardById(id: contact.documentID) {
@@ -325,7 +350,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 self.alertListener(listenerType: .contacts, successful: true)
             }
         }
-        
     }
 
     private func setUpIndividualCardsListener(){
@@ -337,7 +361,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                     print("Failed to fetch documents with error: \(String(describing: error))")
                     return
                 }
-
+                
                 // 2. If no error, get corresponding cards
                 self.userCards.removeAll()
 
@@ -363,11 +387,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 return card
             }
         }
-        
-//        // If not found, target id is removed from cards collection
-//        if let contactId = currentUser?.contactId, let cardRef = cardsRef?.document(id) {
-//            contactsRef?.document(contactId).updateData(["contactCardIds" : FieldValue.arrayRemove([cardRef])])
-//        }
         
         return nil
     }

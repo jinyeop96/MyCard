@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseFirestoreSwift
+import Firebase
 
 class Card: NSObject, Codable {
     @DocumentID var id: String?
@@ -21,4 +22,7 @@ class Card: NSObject, Codable {
     var address: String?
     var mobile: String?
     var email: String?
+    
+    // Hold referencing users of this card
+    var referencedBy: [DocumentReference] = []
 }
