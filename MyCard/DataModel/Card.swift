@@ -18,10 +18,12 @@ class Card: NSObject, Codable {
     // This is used for searching
     var nameLowercased: String?
     var companyName: String?
-    var department: String?
     var address: String?
     var mobile: String?
     var email: String?
+    var instagram: String?
+    var linkedIn: String?
+    var git: String?
     
     // Hold referencing users of this card
     var referencedBy: [DocumentReference] = []

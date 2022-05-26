@@ -18,6 +18,7 @@
 		D8C39526283260E2002EFAF0 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39525283260E2002EFAF0 /* Company.swift */; };
 		D8C39528283270CA002EFAF0 /* CompanyDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39527283270CA002EFAF0 /* CompanyDetailTableViewController.swift */; };
 		D8C3952E2832798F002EFAF0 /* CompanyDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3952D2832798F002EFAF0 /* CompanyDetailTableViewCell.swift */; };
+		D8C39539283FB0A5002EFAF0 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39538283FB0A5002EFAF0 /* EditViewController.swift */; };
 		D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3A281529380040A2A2 /* AppDelegate.swift */; };
 		D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3C281529380040A2A2 /* SceneDelegate.swift */; };
 		D8C75A42281529380040A2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C75A40281529380040A2A2 /* Main.storyboard */; };
@@ -54,6 +55,7 @@
 		D8C39525283260E2002EFAF0 /* Company.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
 		D8C39527283270CA002EFAF0 /* CompanyDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDetailTableViewController.swift; sourceTree = "<group>"; };
 		D8C3952D2832798F002EFAF0 /* CompanyDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDetailTableViewCell.swift; sourceTree = "<group>"; };
+		D8C39538283FB0A5002EFAF0 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		D8C75A37281529380040A2A2 /* MyCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C75A3A281529380040A2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C75A3C281529380040A2A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				D835BE4F28203FF90050B8BF /* MapViewController.swift */,
 				D835BE5428213F5B0050B8BF /* QRCodoGenerationViewController.swift */,
 				D835BE56282153C20050B8BF /* ScannerViewController.swift */,
+				D8C39538283FB0A5002EFAF0 /* EditViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 				D8C75A70281540420040A2A2 /* UIViewController+displayMessage.swift in Sources */,
 				D8C75A77281551080040A2A2 /* DatabaseProtocol.swift in Sources */,
 				D8C75A792815B2810040A2A2 /* Card.swift in Sources */,
+				D8C39539283FB0A5002EFAF0 /* EditViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

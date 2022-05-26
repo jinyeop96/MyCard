@@ -17,14 +17,17 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     let MAP_SEGUE = "mapSegue"
     let QR_CODE_GENERATION_SEGUE = "qrCodeGenerationSegue"
     let COMPANY_DETAIL_SEGUE = "companyDetailSegue"
+    let EDIT_SEGUE = "editSegue"
     
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var titleNameLabel: UILabel!
     @IBOutlet weak var companyNameLabel: UILabel!
-    @IBOutlet weak var departmentNameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var mobileLabel: UILabel!
+    @IBOutlet weak var instagramLabel: UILabel!
+    @IBOutlet weak var linkedInLabel: UILabel!
+    @IBOutlet weak var gitHubLabel: UILabel!
     @IBOutlet weak var optionButton: UIButton!
     
     // MARK: - On view loads
@@ -55,10 +58,12 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         if let card = card, let title = card.title, let name = card.name{
             titleNameLabel.text = title + ". " + name
             companyNameLabel.text = card.companyName ?? ""
-            departmentNameLabel.text = card.department ?? ""
             addressLabel.text = card.address ?? ""
             emailLabel.text = card.email ?? ""
             mobileLabel.text = card.mobile ?? ""
+            instagramLabel.text = card.instagram ?? "Not provided"
+            linkedInLabel.text = card.linkedIn ?? "Not provided"
+            gitHubLabel.text = card.git ?? "Not provided"
             
         }
         
@@ -123,6 +128,11 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         
         if segue.identifier == COMPANY_DETAIL_SEGUE {
             let destination = segue.destination as! CompanyDetailTableViewController
+            destination.card = self.card
+        }
+        
+        if segue.identifier == EDIT_SEGUE {
+            let destination = segue.destination as! EditViewController
             destination.card = self.card
         }
     }

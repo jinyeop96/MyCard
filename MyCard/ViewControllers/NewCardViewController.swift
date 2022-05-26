@@ -10,17 +10,15 @@ import UIKit
 class NewCardViewController: UIViewController, DatabaseListener {
     // MARK: - Properties
     @IBOutlet weak var cardTypeSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var titleTextField: UITextField!
-    @IBOutlet weak var surnameTextField: UITextField!
-    @IBOutlet weak var givennameTextField: UITextField!
-    @IBOutlet weak var companyNameTextField: UITextField!
-    @IBOutlet weak var departmentTextField: UITextField!
+    @IBOutlet weak var mobileTextField: UITextField!
+    @IBOutlet weak var instagramTextField: UITextField!
+    @IBOutlet weak var linkedInTextField: UITextField!
+    @IBOutlet weak var gitTextField: UITextField!
+    @IBOutlet weak var companyTextField: UITextField!
     @IBOutlet weak var streetTextField: UITextField!
     @IBOutlet weak var suburbTextField: UITextField!
     @IBOutlet weak var stateTextField: UITextField!
     @IBOutlet weak var postcodeTextField: UITextField!
-    @IBOutlet weak var mobileTextField: UITextField!
-    @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var companyNameLabel: UILabel!
     
     var databaseController: DatabaseProtocol?
@@ -28,6 +26,8 @@ class NewCardViewController: UIViewController, DatabaseListener {
     
     let BUSINESS_CARD = 0
     let PERSONAL_CARD = 1
+    
+    var user: User?
     
 
     // MARK: - On view loads
@@ -38,8 +38,11 @@ class NewCardViewController: UIViewController, DatabaseListener {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         databaseController = appDelegate.databaseController
         
-        // Get current user detatil and fill some of textFields upon view loads
-        fillDetails()
+        // Get current user detatil
+        if let databaseController = databaseController {
+            self.user = (databaseController as! FirebaseController).currentUser
+            mobileTextField.text = self.user?.mobile ?? ""
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,10 +66,7 @@ class NewCardViewController: UIViewController, DatabaseListener {
         card.isPersonal = true
         
         // 1. Validate check
-        guard let title = titleTextField.text, !title.isEmpty,
-              let surname = surnameTextField.text, !surname.isEmpty,
-              let givenname = givennameTextField.text, !givenname.isEmpty,
-              let email = emailTextField.text, !email.isEmpty,
+        guard let mobile = mobileTextField.text, !mobile.isEmpty,
               let street = streetTextField.text, !street.isEmpty,
               let suburb = suburbTextField.text, !suburb.isEmpty,
               let state = stateTextField.text, !state.isEmpty,
@@ -79,7 +79,7 @@ class NewCardViewController: UIViewController, DatabaseListener {
         // 2. Validate check for business card
         var companyName = ""
         if cardTypeSegmentedControl.selectedSegmentIndex == BUSINESS_CARD {
-            guard let company = companyNameTextField.text, !company.isEmpty else {
+            guard let company = companyTextField.text, !company.isEmpty else {
                 displayMessage(title: "Invalid", message: "Empty in some required")
                 return
             }
@@ -90,14 +90,18 @@ class NewCardViewController: UIViewController, DatabaseListener {
         }
        
         // 3. Create card object
-        card.title = title
-        card.name = givenname + " " + surname
+        card.title = user?.title
+        if let givenname = user?.givenname, let surname = user?.surname {
+            card.name = givenname + " " + surname
+        }
         card.nameLowercased = card.name?.lowercased() ?? ""
         card.address = street + ", " + suburb + ", " + state + ", " + postcode
-        card.email = email
+        card.email = user?.email
         card.companyName = companyName
-        card.mobile = mobileTextField.text ?? ""
-        card.department = departmentTextField.text ?? ""
+        card.mobile = mobile
+        card.instagram = instagramTextField.text ?? ""
+        card.linkedIn = linkedInTextField.text ?? ""
+        card.git = gitTextField.text ?? ""
     
         // 4. Add the card
         databaseController?.addCard(card: card)
@@ -111,19 +115,6 @@ class NewCardViewController: UIViewController, DatabaseListener {
         }
     }
     
-    private func fillDetails(){
-        // Fill user details where they are alraedy known
-        if let databaseController = databaseController {
-            let user = (databaseController as! FirebaseController).currentUser
-            
-            titleTextField.text = user?.title ?? ""
-            surnameTextField.text = user?.surname ?? ""
-            givennameTextField.text = user?.givenname ?? ""
-            mobileTextField.text = user?.mobile ?? ""
-            emailTextField.text = user?.email ?? ""
-        }
-    }
-
     
     // MARK: - Database specific methods
     func didSucceedCreateCard() {

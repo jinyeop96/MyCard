@@ -54,6 +54,10 @@ class SignInViewController: UIViewController, DatabaseListener {
         // Hide the navigation bar when entering the main
         navigationController?.navigationBar.isHidden = true
         performSegue(withIdentifier: TAB_BAR_CONTROLLER_SEGUE, sender: self)
+        
+//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MyTableViewController") as! MyTableViewController
+//        //vc.userChoice = getUserShape(sender)
+//        present(vc, animated: true, completion: nil)
     }
     
     func didNotSucceedSignIn() {
