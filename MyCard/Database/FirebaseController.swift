@@ -174,6 +174,25 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
     }
     
+    func updateCard(card: Card) {
+        if let cardId = card.id, let cardRef = cardsRef?.document(cardId){
+            cardRef.updateData([
+                "mobile": card.mobile ?? "",
+                "instagram": card.instagram ?? "",
+                "linkedIn": card.linkedIn ?? "",
+                "git": card.git ?? "",
+                "companyName": card.companyName ?? "",
+                "address": card.address ?? "",
+            ]) { err in
+                if let error = err{
+                    self.alertListener(listenerType: .edit, successful: false)
+                } else {
+                    self.alertListener(listenerType: .edit, successful: true)
+                }
+            }
+        }
+    }
+    
     func deleteUser(user: User) {
         //
     }
@@ -252,6 +271,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
             if listenerType == .contacts && successful{
                 listener.onContactCardsChange(change: .update, contactCards: contactsCards)
+            }
+            
+            if listenerType == .edit && successful{
+                listener.didSucceedEditCard()
+            }
+            
+            if listenerType == .edit && !successful{
+                listener.didNotSucceedEditCard()
             }
         }
     }

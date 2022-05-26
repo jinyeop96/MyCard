@@ -203,5 +203,13 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
     }
+    
+    func didSucceedEditCard() {
+        //
+    }
+    
+    func didNotSucceedEditCard() {
+        //
+    }
 
 }

@@ -166,7 +166,13 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do nothing
     }
-
+    func didSucceedEditCard() {
+        //
+    }
+    
+    func didNotSucceedEditCard() {
+        //
+    }
 
 
 }

@@ -176,6 +176,13 @@ class MyTableViewController: UITableViewController, DatabaseListener {
         // Do Nothing
     }
     
+    func didSucceedEditCard() {
+        //
+    }
+    
+    func didNotSucceedEditCard() {
+        //
+    }
 
 
 }

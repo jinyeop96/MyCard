@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CardDetailViewController: UIViewController, DatabaseListener {
+class CardDetailViewController: UIViewController, DatabaseListener, EditCardDelegate {
     // MARK: - Properties
     var card: Card?
     var isEditable = false; // set true segued from 'My' Section only
@@ -54,18 +54,7 @@ class CardDetailViewController: UIViewController, DatabaseListener {
             navigationItem.rightBarButtonItem = nil
         }
         
-        // Set user details
-        if let card = card, let title = card.title, let name = card.name{
-            titleNameLabel.text = title + ". " + name
-            companyNameLabel.text = card.companyName ?? ""
-            addressLabel.text = card.address ?? ""
-            emailLabel.text = card.email ?? ""
-            mobileLabel.text = card.mobile ?? ""
-            instagramLabel.text = card.instagram ?? "Not provided"
-            linkedInLabel.text = card.linkedIn ?? "Not provided"
-            gitHubLabel.text = card.git ?? "Not provided"
-            
-        }
+        setCardDetails()
         
         // Let adderss and company name detail touchable
         let toMap = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.segueToMap))
@@ -112,6 +101,20 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         }
     }
     
+    private func setCardDetails(){
+        // Set user details
+        if let card = card, let title = card.title, let name = card.name{
+            titleNameLabel.text = title + ". " + name
+            companyNameLabel.text = card.companyName ?? ""
+            addressLabel.text = card.address ?? ""
+            emailLabel.text = card.email ?? ""
+            mobileLabel.text = card.mobile ?? ""
+            instagramLabel.text = card.instagram ?? "Not provided"
+            linkedInLabel.text = card.linkedIn ?? "Not provided"
+            gitHubLabel.text = card.git ?? "Not provided"
+            
+        }
+    }
     
     
     // MARK: - Navigation
@@ -134,7 +137,14 @@ class CardDetailViewController: UIViewController, DatabaseListener {
         if segue.identifier == EDIT_SEGUE {
             let destination = segue.destination as! EditViewController
             destination.card = self.card
+            destination.delegate = self
         }
+    }
+    
+    // MARK: - Delegation
+    func cardEditionCompleted(card: Card) {
+        self.card = card
+        setCardDetails()
     }
     
 
@@ -172,5 +182,12 @@ class CardDetailViewController: UIViewController, DatabaseListener {
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
     }
-
+    
+    func didSucceedEditCard() {
+        //
+    }
+    
+    func didNotSucceedEditCard() {
+        //
+    }
 }

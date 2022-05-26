@@ -170,5 +170,13 @@ class ContactsTableViewController: UITableViewController, DatabaseListener {
     func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
         // Do nothing
     }
+    
+    func didSucceedEditCard() {
+        //
+    }
+    
+    func didNotSucceedEditCard() {
+        //
+    }
 
 }

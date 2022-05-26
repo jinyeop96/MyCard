@@ -132,4 +132,12 @@ class SignUpViewController: UIViewController, DatabaseListener {
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
     }
+    
+    func didSucceedEditCard() {
+        //
+    }
+    
+    func didNotSucceedEditCard() {
+        //
+    }
 }
