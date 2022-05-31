@@ -65,41 +65,37 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     // MARK: - Authentication
-    
     // This function attempts to create a new account with input email and password, then it creates documents in 'users', 'contacts' and 'individualCards' collections.
-    func signUp(user: User, email: String, password: String) {
+    func signUp(user: User, email: String, password: String){
         Task{
             do {
                 // 1. Try creating a new account
                 let authResut = try await authController.createUser(withEmail: email, password: password)
-                
+
                 // 2. Try creating a new contact document for this user
                 let contact = Contact()
                 let contactRef = try contactsRef?.addDocument(from: contact)
-                
+
                 // 3.Try creating a new userCard document for this user
                 let individualCard = Individual()
                 let individualCardRef = try individualCardsRef?.addDocument(from: individualCard)
-                
+
                 // 4. Add additional details, then create a document
                 user.uid = authResut.user.uid
                 user.contactId = contactRef?.documentID
                 user.individualCardId = individualCardRef?.documentID
-                
+
                 let _ = try usersRef?.addDocument(from: user)
-               
-                // 5. Once everything is successful, alter
-                await MainActor.run{
+                
+                await MainActor.run {
                     alertListener(listenerType: .signUp, successful: true)
                 }
-                
+
             } catch {
-                await MainActor.run{
+                await MainActor.run {
                     alertListener(listenerType: .signUp, successful: false)
                 }
-                
             } // do-catch ends
-            
         } // Task ends
     }
     
@@ -112,31 +108,61 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 
                 // 2. Access to the user document with provided email and set currentUser
                 setUpUserListener(email: email)
-        
-                // 3. Alert listener
-                await MainActor.run {
-                    self.alertListener(listenerType: .signIn, successful: true)
-                }
+                
+                // 3. After login is done, maybe put this in the login web service completion block
+                // https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
+                let storyboard = await UIStoryboard(name: "Main", bundle: nil)
+                let mainTabBarController = await storyboard.instantiateViewController(identifier: "MainTabBarController")
+                
+                // This is to get the SceneDelegate object from your view controller
+                // then call the change root view controller function to change to main tab bar
+                await (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
                 
             } catch {
                 await MainActor.run {
                     alertListener(listenerType: .signIn, successful: false)
                 }
-                print("Error : \(error)" )
-                
             } // do-catch ends
         } // Task ends
     }
     
-    func logOut() {
+    func signOut() {
+        
+        Task {
+            do {
+                // Try Sign out
+                try authController.signOut()
+               
+                
+                // Switch root view controller to the Sign In view controller
+                // https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
+                let storyboard = await UIStoryboard(name: "Main", bundle: nil)
+                let signInNavigationController = await storyboard.instantiateViewController(identifier: "SignInNavigationController")
+
+                await (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(signInNavigationController)
+            } catch let signOutError as NSError {
+                print("Error signing out: %@", signOutError)
+            }
+        }
+        
+    }
+    
+    func deleteUser(user: User) {
         //
     }
+    
+    func updatePassword(password: String) {
+        authController.currentUser?.updatePassword(to: password) {error in
+            return
+        }
+    }
+    
     
     
     // MARK: - Documents sources methods
     // This function is called only by current user for adding a new card.
     // This create a new document in 'cards' collection, then the new document ID is stored in user's indivisual card list.
-    func addCard(card: Card) {
+    func addCard(card: Card) -> Bool{
         do {
             // 1. Add a new document in 'cards' collection
             let newCardRef = try cardsRef?.addDocument(from: card)
@@ -146,9 +172,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 individualCardList.updateData(["individualCardIds" : FieldValue.arrayUnion([newCardRef])])
             }
             
-            alertListener(listenerType: .newCard, successful: true)
+            //alertListener(listenerType: .newCard, successful: true)
+            return true
         } catch {
-            alertListener(listenerType: .newCard, successful: false)
+            //alertListener(listenerType: .newCard, successful: false)
+            return false
         } // do-catch ends
     }
     
@@ -174,27 +202,17 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
     }
     
-    func updateCard(card: Card) {
+    func updateCard(card: Card) -> Bool {
         if let cardId = card.id, let cardRef = cardsRef?.document(cardId){
-            cardRef.updateData([
-                "mobile": card.mobile ?? "",
-                "instagram": card.instagram ?? "",
-                "linkedIn": card.linkedIn ?? "",
-                "git": card.git ?? "",
-                "companyName": card.companyName ?? "",
-                "address": card.address ?? "",
-            ]) { err in
-                if let error = err{
-                    self.alertListener(listenerType: .edit, successful: false)
-                } else {
-                    self.alertListener(listenerType: .edit, successful: true)
-                }
-            }
+            cardRef.updateData(["mobile": card.mobile ?? ""])
+            cardRef.updateData(["instagram": card.instagram ?? ""])
+            cardRef.updateData(["git": card.git ?? ""])
+            cardRef.updateData(["companyName": card.companyName ?? ""])
+            cardRef.updateData(["address": card.address ?? ""])
+                
+            return true
         }
-    }
-    
-    func deleteUser(user: User) {
-        //
+        return false
     }
     
     func searchCards(searchText: String){
@@ -215,7 +233,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     // This function adds the input card ID to user's contact list
-    func addToContact(card: Card) {
+    func addToContact(card: Card) -> Bool {
         // 1. Check given card exists in collection
         if let cardId = card.id, let cardRef = cardsRef?.document(cardId), let contactId = currentUser?.contactId, let userContactList = contactsRef?.document(contactId) {
             
@@ -224,7 +242,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
             // 3. Set this user as referenced user to the card
             cardRef.updateData(["referencedBy" : FieldValue.arrayUnion([userContactList])])
+            
+            return true
         }
+        
+        return false
     }
     
     // This function removes card ID from user's contact list
@@ -249,20 +271,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 listener.didNotSucceedSignUp()
             }
             
-            if listenerType == .signIn && successful{
-                listener.didSucceedSignIn()
-            }
-            
             if listenerType == .signIn && !successful{
                 listener.didNotSucceedSignIn()
-            }
-            
-            if listenerType == .newCard && successful{
-                listener.didSucceedCreateCard()
-            }
-            
-            if listenerType == .newCard && !successful{
-                listener.didNotSucceedCreateCard()
             }
             
             if listenerType == .my && successful{
@@ -271,14 +281,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
             if listenerType == .contacts && successful{
                 listener.onContactCardsChange(change: .update, contactCards: contactsCards)
-            }
-            
-            if listenerType == .edit && successful{
-                listener.didSucceedEditCard()
-            }
-            
-            if listenerType == .edit && !successful{
-                listener.didNotSucceedEditCard()
             }
         }
     }

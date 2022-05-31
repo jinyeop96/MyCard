@@ -8,10 +8,10 @@
 import UIKit
 
 protocol EditCardDelegate: AnyObject{
-    func cardEditionCompleted(card: Card)
+    func updateCard(card: Card)
 }
 
-class EditViewController: UIViewController, DatabaseListener {
+class EditViewController: UIViewController{
     // MARK: - Properties
     var card: Card?
     @IBOutlet weak var mobileTextField: UITextField!
@@ -27,7 +27,6 @@ class EditViewController: UIViewController, DatabaseListener {
     
     weak var delegate: EditCardDelegate?
     var isCardPersonal = false
-    var listenerType: ListenerType = .edit
     var databaseController: DatabaseProtocol?
     
     
@@ -36,8 +35,7 @@ class EditViewController: UIViewController, DatabaseListener {
         super.viewDidLoad()
         
         // Set database controller
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
+        databaseController = getDatabaseController()
 
         // Load the card details onto the fields
         if let card = card, let isPersonal = card.isPersonal{
@@ -65,20 +63,9 @@ class EditViewController: UIViewController, DatabaseListener {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        databaseController?.addListener(listener: self)
-        tabBarController?.tabBar.isHidden = false
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        databaseController?.removeListener(listener: self)
-    }
-    
     
     // MARK: - View specific methods
-    @IBAction func onSaveActivated(_ sender: UIBarButtonItem) {
+    @IBAction func onDone(_ sender: UIBarButtonItem) {
         // 1. Check validation
         guard let mobile = mobileTextField.text, !mobile.isEmpty,
               let street = streetTextField.text, !street.isEmpty,
@@ -86,7 +73,7 @@ class EditViewController: UIViewController, DatabaseListener {
               let state = stateTextField.text, !state.isEmpty,
               let postcode = postcodeTextField.text, !postcode.isEmpty
         else {
-            displayMessage(title: "Invalid", message: "Empty in some required")
+            displayMessage(title: "Invalid", message: "Empty in some required field(s).")
             return
         }
         
@@ -95,7 +82,7 @@ class EditViewController: UIViewController, DatabaseListener {
         if !isCardPersonal {
             // 1. Validate check
             guard let company = companyTextField.text, !company.isEmpty else {
-                displayMessage(title: "Invalid", message: "Empty in some required")
+                displayMessage(title: "Invalid", message: "Empty in some required field(s).")
                 return
             }
             companyName = company
@@ -109,62 +96,14 @@ class EditViewController: UIViewController, DatabaseListener {
             card.git = gitTextField.text ?? ""
             card.companyName = companyName
             card.address = street + ", " + suburb + ", " + state + ", " + postcode
-            
-            databaseController?.updateCard(card: card)
         }
-    }
-    
-    // MARK: - Database specific methods
-    func didSucceedEditCard() {
-        // Let the delegate(CardDetailViewControlelr) notice the changes
-        if let card = card {
-            delegate?.cardEditionCompleted(card: card)
+        
+        // 3. Try updating the card
+        if let databaseController = databaseController, let card = card, databaseController.updateCard(card: card) {
+            delegate?.updateCard(card: card)
             navigationController?.popViewController(animated: true)
+        } else {
+            displayMessage(title: "Error", message: "Unable to edit the card. Please try again.")
         }
     }
-    
-    func didNotSucceedEditCard() {
-        displayMessage(title: "Error", message: "Unable to edit the card. Please try again.")
-    }
-    
-    
-    // MARK: - Unnecessary inherited methods
-    func didSucceedSignUp() {
-        //
-    }
-    
-    func didSucceedSignIn() {
-        //
-    }
-    
-    func didNotSucceedSignUp() {
-        //
-    }
-    
-    func didNotSucceedSignIn() {
-        //
-    }
-    
-    func didSucceedCreateCard() {
-        //
-    }
-    
-    func didNotSucceedCreateCard() {
-        //
-    }
-    
-    func didSearchCards(cards: [Card]) {
-        //
-    }
-    
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
-        //
-    }
-    
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
-        //
-    }
-    
-
-
 }

@@ -20,7 +20,7 @@ class CompanyDetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Add loading
+        // 1. loading indicator
         indicator.style = UIActivityIndicatorView.Style.large
         indicator.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(indicator)
@@ -28,14 +28,13 @@ class CompanyDetailTableViewController: UITableViewController {
             indicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
-        
-        
         indicator.startAnimating()
+        
+        // 2. get company details from Google Knowledge graph API
         getCompanyDetails()
     }
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -62,13 +61,12 @@ class CompanyDetailTableViewController: UITableViewController {
         return cell
     }
     
-
-    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return false
     }
 
+    
     // MARK: - View specific methods
     private func getCompanyDetails(){
         if let card = card, let companyName = card.companyName?.lowercased(){
@@ -86,7 +84,7 @@ class CompanyDetailTableViewController: UITableViewController {
             
             // 2. Check for correctness
             guard let requestURL = searchURLComponents.url else {
-             print("Invalid URL.")
+             displayMessage(title: "Error", message: "Invalid URL detected! Try again.")
              return
             }
             

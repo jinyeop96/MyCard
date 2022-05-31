@@ -6,8 +6,11 @@
 //
 
 import UIKit
+protocol NewCardDelegate: AnyObject{
+    func addCard(card: Card) -> Bool
+}
 
-class NewCardViewController: UIViewController, DatabaseListener {
+class NewCardViewController: UIViewController{
     // MARK: - Properties
     @IBOutlet weak var cardTypeSegmentedControl: UISegmentedControl!
     @IBOutlet weak var mobileTextField: UITextField!
@@ -21,39 +24,30 @@ class NewCardViewController: UIViewController, DatabaseListener {
     @IBOutlet weak var postcodeTextField: UITextField!
     @IBOutlet weak var companyNameLabel: UILabel!
     
-    var databaseController: DatabaseProtocol?
-    var listenerType: ListenerType = .newCard
+    var user: User?
+    var delegate: NewCardDelegate?
+    
     
     let BUSINESS_CARD = 0
     let PERSONAL_CARD = 1
     
-    var user: User?
     
-
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Get reference to Firebase
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
+        // Set mobile detail upon view laods
+        mobileTextField.text = user?.mobile ?? ""
         
-        // Get current user detatil
-        if let databaseController = databaseController {
-            self.user = (databaseController as! FirebaseController).currentUser
-            mobileTextField.text = self.user?.mobile ?? ""
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
-        databaseController?.addListener(listener: self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        databaseController?.removeListener(listener: self)
     }
     
     // MARK: - View specific methods
@@ -61,7 +55,8 @@ class NewCardViewController: UIViewController, DatabaseListener {
     // This method is invoked when the user touches 'Create Card' button.
     // It then check whether or not all required fileds are filled.
     // If so, it assigns user's details in a Card object, otherwise it displays appropriate message to fill the empty fields.
-    @IBAction func didTouchCreateCard(_ sender: UIButton) {
+
+    @IBAction func onSaveCard(_ sender: UIButton) {
         let card = Card()
         card.isPersonal = true
         
@@ -104,7 +99,12 @@ class NewCardViewController: UIViewController, DatabaseListener {
         card.git = gitTextField.text ?? ""
     
         // 4. Add the card
-        databaseController?.addCard(card: card)
+        //databaseController?.addCard(card: card)
+        if let delegate = delegate, delegate.addCard(card: card) {
+             navigationController?.popViewController(animated: true)
+        } else {
+             displayMessage(title: "Error", message: "Card creation failed. Try again.")
+        }
     }
     
     @IBAction func didTouchCardTypeSegementedControl(_ sender: UISegmentedControl) {
@@ -114,53 +114,4 @@ class NewCardViewController: UIViewController, DatabaseListener {
             companyNameLabel.text = "Company Name"
         }
     }
-    
-    
-    // MARK: - Database specific methods
-    func didSucceedCreateCard() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    func didNotSucceedCreateCard() {
-        displayMessage(title: "Error", message: "Card creation failed. Try again.")
-    }
-    
-    
-    // MARK: - Unnecessary inherited methods
-    func didSucceedSignUp() {
-        // Do Nothing
-    }
-    
-    func didSucceedSignIn() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedSignUp() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedSignIn() {
-        // Do Nothing
-    }
-    
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
-        // Do Nothing
-    }
-    func didSearchCards(cards: [Card]) {
-        // Do Nothing
-    }
-    
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
-        // Do Nothing
-    }
-    
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
-    }
-   
-
 }

@@ -7,9 +7,11 @@
 
 import UIKit
 
-class SearchTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener {
+class SearchTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener, CardDetailDelegate, ScannerDelegate {
     // MARK: - Properties
     let CARD_DETAIL_SEGUE = "cardDetailSegue"
+    let SCANNER_SEGUE = "scannerSegue"
+    
     var businessCards = [Card]()
     var personalCards = [Card]()
     
@@ -21,11 +23,13 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // database controller
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
+        businessCards.removeAll()
+        personalCards.removeAll()
+        
+        // Set database controller
+        databaseController = getDatabaseController()
 
-        // Search controller
+        // Set search controller
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -91,32 +95,6 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     }
     
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
     
     // MARK: - Search result updating
     func updateSearchResults(for searchController: UISearchController) {
@@ -137,11 +115,11 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
         for card in cards{
             if let isPersonal = card.isPersonal{
                 if !isPersonal {
-                    businessCards.insert(card, at: businessCards.count)
+                    businessCards.append(card)
                 }
                 
                 if isPersonal {
-                    personalCards.insert(card, at: personalCards.count)
+                    personalCards.append(card)
                 }
             }
         }
@@ -152,10 +130,10 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == CARD_DETAIL_SEGUE {
-            
             let destination = segue.destination as! CardDetailViewController
             destination.isEditable = false
             destination.isAddable = true
+            destination.delegate = self
             
             if let indexPath = tableView.indexPathForSelectedRow {
                 if indexPath.section == BUSINESS_CARD_SECTION {
@@ -167,32 +145,41 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
                     
                 }
             }
-            
         }
+        
+        if segue.identifier == SCANNER_SEGUE {
+            let destination = segue.destination as! ScannerViewController
+            destination.delegate = self
+        }
+    }
+    
+    
+    // MARK: - Delegation
+    func addToContact(card: Card) -> Bool {
+        if let databaseController = databaseController {
+            return databaseController.addToContact(card: card)
+        }
+        return false
+    }
+    
+    func addScannedCardToContact(card: Card) -> Bool {
+        addToContact(card: card)
+    }
+    
+    func getCardById(cardId: String) -> Card? {
+        return getCardById(databaseController: databaseController, cardId: cardId)
     }
     
     // MARK: - Unneccesary inherited methods
     func didSucceedSignUp() {
         // Do Nothing
     }
-    
-    func didSucceedSignIn() {
-        // Do Nothing
-    }
-    
+  
     func didNotSucceedSignUp() {
         // Do Nothing
     }
     
     func didNotSucceedSignIn() {
-        // Do Nothing
-    }
-    
-    func didSucceedCreateCard() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedCreateCard() {
         // Do Nothing
     }
     
@@ -202,14 +189,6 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
-    }
-    
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
     }
 
 }

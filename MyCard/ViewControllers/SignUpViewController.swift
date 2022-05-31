@@ -73,11 +73,10 @@ class SignUpViewController: UIViewController, DatabaseListener {
     
     
     // MARK: - View specific methods
-    
     // This will be called when the uesr touches Sign Up button, it then checks whether all required fields are filled up.
     // If so, it will assign given details in a new User object and try to create a new account with,
     // Otherwise it will simply display a message to fill up required fields and terminate.
-    @IBAction func didTouchSignUp(_ sender: UIButton) {
+    @IBAction func onDoneActivated(_ sender: Any) {
         // 1. Filter any invalid data
         guard let title = titleTextField.text,
               let surname = surnameTextField.text,
@@ -106,19 +105,7 @@ class SignUpViewController: UIViewController, DatabaseListener {
     
     
     // MARK: - Unnecessary inherited methods
-    func didSucceedSignIn() {
-        // Do Nothing
-    }
-    
     func didNotSucceedSignIn() {
-        // Do Nothing
-    }
-    
-    func didSucceedCreateCard() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedCreateCard() {
         // Do Nothing
     }
     
@@ -131,13 +118,5 @@ class SignUpViewController: UIViewController, DatabaseListener {
     }
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
-    }
-    
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
     }
 }

@@ -8,40 +8,31 @@
 import UIKit
 import AVFoundation
 
+protocol ScannerDelegate: AnyObject{
+    func addScannedCardToContact(card: Card) -> Bool
+    func getCardById(cardId: String) -> Card?
+}
 
-class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, DatabaseListener {
+
+class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     // MARK: - Properties
     var captureSession = AVCaptureSession()
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var qrCodeFrameView: UIView?
+    var delegate: ScannerDelegate?
+
     
-    var listenerType: ListenerType = .scanner
-    var databaseController: DatabaseProtocol?
 
     // MARK: - On View loads
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Set database controller
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
 
+        tabBarController?.tabBar.isHidden = true
+        
         // begin detecting QR codes
         beginQRScanning()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        databaseController?.addListener(listener: self)
-        tabBarController?.tabBar.isHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        databaseController?.removeListener(listener: self)
-    }
-    
-    
+
     
     // MARK: - View specific methods
     // https://www.appcoda.com/intermediate-swift-tips/qrcode-reader.html
@@ -111,68 +102,12 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj)
             qrCodeFrameView?.frame = barCodeObject!.bounds
 
-            // Attemp to any into contact
-            if let scannedData = metadataObj.stringValue {
-                // 1. First check if scanned data exitst in database
-                if let firebaseController = databaseController as? FirebaseController {
-                    if let scannedCard = firebaseController.getCardById(id: scannedData) {
-                        // 2. If so, add it to the contact
-                        databaseController?.addToContact(card: scannedCard)
-                        
-                        // 3. Then navigate back to the previous view
-                        navigationController?.popViewController(animated: true)
-                    } else {
-                        displayMessage(title: "Error", message: "No cards found in database. Please try again.")
-                    }
-                }
+            // 1. Check if scanned data exists, then try adding it to the contact list
+            if let scannedData = metadataObj.stringValue, let delegate = delegate, let scannedCard = delegate.getCardById(cardId: scannedData), delegate.addScannedCardToContact(card: scannedCard) {
+                navigationController?.popViewController(animated: true)
+            } else {
+                displayMessage(title: "Error", message: "No cards found in database. Please try again.")
             }
         }
     }
-    
-    
-    // MARK: - Unnecessary inherited methods
-    func didSucceedSignUp() {
-        // Do nothing
-    }
-    
-    func didSucceedSignIn() {
-        // Do nothing
-    }
-    
-    func didNotSucceedSignUp() {
-        // Do nothing
-    }
-    
-    func didNotSucceedSignIn() {
-        // Do nothing
-    }
-    
-    func didSucceedCreateCard() {
-        // Do nothing
-    }
-    
-    func didNotSucceedCreateCard() {
-        // Do nothing
-    }
-    
-    func didSearchCards(cards: [Card]) {
-        // Do nothing
-    }
-    
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
-        // Do nothing
-    }
-    
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
-        // Do nothing
-    }
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
-    }
-
-
 }

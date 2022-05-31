@@ -15,31 +15,19 @@ enum DatabaseChange{
 
 enum ListenerType {
     case my
-    case newCard
-    case cardDetail
     case contacts
-    case all
     case update
     case signUp
     case signIn
     case searchCards
-    case scanner
-    case edit
 }
 
 protocol DatabaseListener: AnyObject {
     var listenerType: ListenerType {get set}
-    //func onContactsChange(change: DatabaseChange, teamHeroes: [Superhero])
     func didSucceedSignUp()
-    func didSucceedSignIn()
     func didNotSucceedSignUp()
     func didNotSucceedSignIn()
-    func didSucceedCreateCard()
-    func didNotSucceedCreateCard()
     func didSearchCards(cards: [Card])
-    func didSucceedEditCard()
-    func didNotSucceedEditCard()
-    
     func onUserCardsChanges(change: ListenerType, userCards: [Card])
     func onContactCardsChange(change: ListenerType, contactCards: [Card])
 }
@@ -51,16 +39,17 @@ protocol DatabaseProtocol: AnyObject {
     
     // Users
     func deleteUser(user: User)
-    func signUp(user: User, email: String, password: String)
+    func updatePassword(password: String) 
+    func signUp(user: User, email: String, password: String) 
     func signIn(email: String, password: String)
-    func logOut()
+    func signOut()
     
     // Cards
-    func addCard(card: Card)
+    func addCard(card: Card) -> Bool
     func removeCard(card: Card)
-    func updateCard(card: Card)
+    func updateCard(card: Card) -> Bool
     func searchCards(searchText: String)
-    func addToContact(card: Card)
+    func addToContact(card: Card) -> Bool
     func removeFromContact(card: Card)
     
 

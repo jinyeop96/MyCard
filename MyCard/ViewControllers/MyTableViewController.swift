@@ -7,9 +7,10 @@
 
 import UIKit
 
-class MyTableViewController: UITableViewController, DatabaseListener {
+class MyTableViewController: UITableViewController, DatabaseListener, NewCardDelegate {
     // MARK: - Properties
     let CARD_DETAIL_SEGUE = "cardDetailSegue"
+    let NEW_CARD_SEGUE = "newCardSegue"
     
     var businessCards = [Card]()
     var personalCards = [Card]()
@@ -21,8 +22,8 @@ class MyTableViewController: UITableViewController, DatabaseListener {
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
+        
+        databaseController = getDatabaseController()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,14 +106,11 @@ class MyTableViewController: UITableViewController, DatabaseListener {
         for card in userCards {
             if let isPersonal = card.isPersonal {
                 if isPersonal {
-                    personalCards.insert(card, at: personalCards.count)
-                }
-                
-                if !isPersonal {
-                    businessCards.insert(card, at: businessCards.count)
+                    personalCards.append(card)
+                } else {
+                    businessCards.append(card)
                 }
             }
-            
         }
         
         tableView.reloadData()
@@ -137,18 +135,27 @@ class MyTableViewController: UITableViewController, DatabaseListener {
                     destination.card = personalCards[indexPath.row]
                 }
             }
-            
-            
-            
+        }
+        
+        if segue.identifier == NEW_CARD_SEGUE {
+            let destination = segue.destination as! NewCardViewController
+            destination.user = getCurrentUser(databaseController: databaseController)
+            destination.delegate = self
         }
     }
     
-    // MARK: - Unnecessary inherited methods
-    func didSucceedSignUp() {
-        // Do Nothing
+    // MARK: - Delegation
+    func addCard(card: Card) -> Bool {
+        if let databaseController = databaseController {
+            return databaseController.addCard(card: card)
+        }
+        return false
     }
     
-    func didSucceedSignIn() {
+
+    
+    // MARK: - Unnecessary inherited methods
+    func didSucceedSignUp() {
         // Do Nothing
     }
     
@@ -160,14 +167,6 @@ class MyTableViewController: UITableViewController, DatabaseListener {
         // Do Nothing
     }
     
-    func didSucceedCreateCard() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedCreateCard() {
-        // Do Nothing
-    }
-    
     func didSearchCards(cards: [Card]) {
         // Do Nothing
     }
@@ -175,14 +174,4 @@ class MyTableViewController: UITableViewController, DatabaseListener {
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
     }
-    
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
-    }
-
-
 }

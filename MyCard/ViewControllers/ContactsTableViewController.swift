@@ -143,23 +143,11 @@ class ContactsTableViewController: UITableViewController, DatabaseListener {
         // Do nothing
     }
     
-    func didSucceedSignIn() {
-        // Do nothing
-    }
-    
     func didNotSucceedSignUp() {
         // Do nothing
     }
     
     func didNotSucceedSignIn() {
-        // Do nothing
-    }
-    
-    func didSucceedCreateCard() {
-        // Do nothing
-    }
-    
-    func didNotSucceedCreateCard() {
         // Do nothing
     }
     
@@ -169,14 +157,6 @@ class ContactsTableViewController: UITableViewController, DatabaseListener {
     
     func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
         // Do nothing
-    }
-    
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
     }
 
 }

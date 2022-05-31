@@ -11,20 +11,19 @@ import FirebaseFirestoreSwift
 
 class MapViewController: UIViewController, CLLocationManagerDelegate{
     // MARK: - Properties
-    var card: Card? = nil
+    var card: Card?
     var locationManager: CLLocationManager = CLLocationManager()
     @IBOutlet weak var mapView: MKMapView!
     
+    
+    // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        // Set Search controller
-//        // Search controller
-//        let searchController = UISearchController(searchResultsController: nil)
-//        searchController.searchResultsUpdater = self
-//        searchController.obscuresBackgroundDuringPresentation = true
-//        searchController.searchBar.placeholder = "Search By Address"
-//        navigationItem.searchController = searchController
+        
+        if locationManager.authorizationStatus == .notDetermined || locationManager.authorizationStatus != .authorizedAlways {
+            locationManager.requestWhenInUseAuthorization()
+        }
         
         // Zoom into the card address
         if let card = card, let address = card.address, let companyName = card.companyName {
@@ -32,8 +31,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         }
     }
     
+    
     // MARK: - View specific methods
     private func focusMap(address: String, title: String){
+        // https://www.hackingwithswift.com/example-code/location/how-to-look-up-a-location-with-mklocalsearchrequest
         // 1. Set search request with card's address
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = address
@@ -62,16 +63,4 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
             
         }
     }
-    
-//    // MARK: - Search bar controller specific methods
-//    func updateSearchResults(for searchController: UISearchController) {
-//        guard let searchText = searchController.searchBar.text else {
-//            return
-//        }
-//
-//        if searchText.count > 0 {
-//            focusMap(address: searchText, title: "")
-//        }
-//    }
-
 }

@@ -50,16 +50,6 @@ class SignInViewController: UIViewController, DatabaseListener {
     
     
     //MARK: - Database specific methods
-    func didSucceedSignIn() {
-        // Hide the navigation bar when entering the main
-        navigationController?.navigationBar.isHidden = true
-        performSegue(withIdentifier: TAB_BAR_CONTROLLER_SEGUE, sender: self)
-        
-//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MyTableViewController") as! MyTableViewController
-//        //vc.userChoice = getUserShape(sender)
-//        present(vc, animated: true, completion: nil)
-    }
-    
     func didNotSucceedSignIn() {
         indicator.stopAnimating()
         displayMessage(title: "Error", message: "Sign in failed. Try again.")
@@ -88,15 +78,6 @@ class SignInViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     
-    
-    func didSucceedCreateCard() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedCreateCard() {
-        // Do Nothing
-    }
-    
     func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
         // Do Nothing
     }
@@ -107,13 +88,5 @@ class SignInViewController: UIViewController, DatabaseListener {
     
     func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
         // Do Nothing
-    }
-    
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
     }
 }

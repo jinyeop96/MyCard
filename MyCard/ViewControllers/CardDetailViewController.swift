@@ -7,18 +7,12 @@
 
 import UIKit
 
-class CardDetailViewController: UIViewController, DatabaseListener, EditCardDelegate {
+protocol CardDetailDelegate: AnyObject {
+    func addToContact(card: Card) -> Bool
+}
+
+class CardDetailViewController: UIViewController, EditCardDelegate {
     // MARK: - Properties
-    var card: Card?
-    var isEditable = false; // set true segued from 'My' Section only
-    var isAddable = false;
-    var listenerType: ListenerType = .cardDetail
-    var databaseController: DatabaseProtocol?
-    let MAP_SEGUE = "mapSegue"
-    let QR_CODE_GENERATION_SEGUE = "qrCodeGenerationSegue"
-    let COMPANY_DETAIL_SEGUE = "companyDetailSegue"
-    let EDIT_SEGUE = "editSegue"
-    
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var titleNameLabel: UILabel!
     @IBOutlet weak var companyNameLabel: UILabel!
@@ -30,33 +24,45 @@ class CardDetailViewController: UIViewController, DatabaseListener, EditCardDele
     @IBOutlet weak var gitHubLabel: UILabel!
     @IBOutlet weak var optionButton: UIButton!
     
+    let MAP_SEGUE = "mapSegue"
+    let QR_CODE_GENERATION_SEGUE = "qrCodeGenerationSegue"
+    let COMPANY_DETAIL_SEGUE = "companyDetailSegue"
+    let EDIT_SEGUE = "editSegue"
+    
+    var card: Card?
+    var delegate: CardDetailDelegate?
+    
+    var isEditable = false; // set true if segued from 'My' Section only
+    var isAddable = false;  // set true if segued from 'Searching' Section only
+ 
+    
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
         
+        // 1. Structure the scene appropriately
         // Accessed from owner
         if isEditable {
-            
             optionButton.setTitle("Generate QR Code", for: .normal)
         }
         
-        // Accessed from others but searching
+        // Accessed from searching
         if isAddable {
             optionButton.setTitle("Add to Contact", for: .normal)
             navigationItem.rightBarButtonItem = nil
         }
         
-        // Accessed from others
+        // Accessed from contacts
         if !isEditable && !isAddable {
             optionButton.isHidden = true
             navigationItem.rightBarButtonItem = nil
         }
         
+        // 2. Display card details
         setCardDetails()
         
-        // Let adderss and company name detail touchable
+        // 3. Enable the adderss and company details touchable
+        // https://stackoverflow.com/questions/33658521/how-to-make-a-uilabel-clickable
         let toMap = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.segueToMap))
         addressLabel.isUserInteractionEnabled = true
         addressLabel.addGestureRecognizer(toMap)
@@ -65,19 +71,10 @@ class CardDetailViewController: UIViewController, DatabaseListener, EditCardDele
         companyNameLabel.isUserInteractionEnabled = true
         companyNameLabel.addGestureRecognizer(toCompanyInfo)
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        databaseController?.addListener(listener: self)
+        // 4. Hide tab below
         tabBarController?.tabBar.isHidden = true
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        databaseController?.removeListener(listener: self)
-    }
-
     
     //MARK: - This view specific methods
     @IBAction func segueToMap(sender: UITapGestureRecognizer) {
@@ -89,20 +86,20 @@ class CardDetailViewController: UIViewController, DatabaseListener, EditCardDele
     }
     
     @IBAction func didTouchOptionButton(_ sender: Any) {
-        // editable means the user is viewing the card, so it can generate the QR code
+        // Segue to QR code generation
         if isEditable {
             performSegue(withIdentifier: QR_CODE_GENERATION_SEGUE, sender: self)
-        }
-        
-        if isAddable, let card = card{
-            databaseController?.addToContact(card: card)
-            
-            navigationController?.popViewController(animated: true)
+        } else {
+            // Attempt adding this card to current user's contact list. Pop this view controller if it is successful
+            if let card = card, let delegate = delegate, delegate.addToContact(card: card) {
+                navigationController?.popViewController(animated: true)
+            } else {
+                displayMessage(title: "Error", message: "Fail to add the card to contact list. Try again.")
+            }
         }
     }
     
     private func setCardDetails(){
-        // Set user details
         if let card = card, let title = card.title, let name = card.name{
             titleNameLabel.text = title + ". " + name
             companyNameLabel.text = card.companyName ?? ""
@@ -142,52 +139,8 @@ class CardDetailViewController: UIViewController, DatabaseListener, EditCardDele
     }
     
     // MARK: - Delegation
-    func cardEditionCompleted(card: Card) {
+    func updateCard(card: Card) {
         self.card = card
         setCardDetails()
-    }
-    
-
-    // MARK: - Unnecessary inherited methods
-    func didSucceedSignUp() {
-        // Do Nothing
-    }
-    
-    func didSucceedSignIn() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedSignUp() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedSignIn() {
-        // Do Nothing
-    }
-    
-    func didSucceedCreateCard() {
-        // Do Nothing
-    }
-    
-    func didNotSucceedCreateCard() {
-        // Do Nothing
-    }
-    
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
-        // Do Nothing
-    }
-    func didSearchCards(cards: [Card]) {
-        // Do Nothing
-    }
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
-        // Do Nothing
-    }
-    
-    func didSucceedEditCard() {
-        //
-    }
-    
-    func didNotSucceedEditCard() {
-        //
     }
 }

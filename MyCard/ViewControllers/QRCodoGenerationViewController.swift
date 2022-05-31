@@ -12,7 +12,7 @@ class QRCodoGenerationViewController: UIViewController {
     @IBOutlet weak var qrCodeImageView: UIImageView!
     @IBOutlet weak var titleNameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
-    var card: Card? = nil
+    var card: Card?
     
 
     // MARK: - On view loads
@@ -33,13 +33,20 @@ class QRCodoGenerationViewController: UIViewController {
         }
     }
     
+    // This function generates a QR code using card document ID.
+    // https://www.hackingwithswift.com/example-code/media/how-to-create-a-qr-code
     func generateQRCode() -> UIImage? {
         if let cardId = card?.id {
             let data = cardId.data(using: String.Encoding.ascii)
             
             if let QRFilter = CIFilter(name: "CIQRCodeGenerator") {
                 QRFilter.setValue(data, forKey: "inputMessage")
-                guard let QRImage = QRFilter.outputImage else {return nil}
+                
+                guard let QRImage = QRFilter.outputImage else {
+                    return nil
+                    
+                }
+                
                 return UIImage(ciImage: QRImage)
             }
         }
