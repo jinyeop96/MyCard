@@ -38,5 +38,10 @@ extension UIViewController {
         view.addGestureRecognizer(tap)
     }
     
+    func setDateFormatter(dateFormatter: DateFormatter){
+        // https://developer.apple.com/documentation/foundation/dateformatter
+        dateFormatter.locale = Locale(identifier: "en_GB")
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMMddyyyy")
+    }
     
 }

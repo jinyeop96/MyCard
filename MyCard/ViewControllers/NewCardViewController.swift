@@ -47,10 +47,7 @@ class NewCardViewController: UIViewController{
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
+
     
     // MARK: - View specific methods
     

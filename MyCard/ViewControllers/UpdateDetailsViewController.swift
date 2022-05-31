@@ -12,9 +12,11 @@ class UpdateDetailsViewController: UIViewController {
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var surnameTextField: UITextField!
     @IBOutlet weak var givenNameTextField: UITextField!
-    @IBOutlet weak var dobTextField: UITextField!
+    @IBOutlet weak var dobPicker: UIDatePicker!
     @IBOutlet weak var mobileTextField: UITextField!
     @IBOutlet weak var applyForCardsSwitch: UISwitch!
+    
+    let dateFormatter = DateFormatter()
     
     var databaseController: DatabaseProtocol?
     var currentUser: User?
@@ -22,6 +24,12 @@ class UpdateDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set DateFormatter
+        setDateFormatter(dateFormatter: dateFormatter)
+        // Set datePicker max
+        // https://stackoverflow.com/questions/10494174/minimum-and-maximum-date-in-uidatepicker
+        dobPicker.maximumDate = Calendar.current.date(byAdding: .year, value: 0, to: Date())
 
         tabBarController?.tabBar.isHidden = true
         
@@ -32,19 +40,22 @@ class UpdateDetailsViewController: UIViewController {
     
     // MARK: - View specific methods
     private func populateDetails(){
-        if let currentUser = currentUser {
+        if let currentUser = currentUser, let dob = currentUser.dob {
             titleTextField.text = currentUser.title
             surnameTextField.text = currentUser.surname
             givenNameTextField.text = currentUser.givenname
-            dobTextField.text = currentUser.dob
             mobileTextField.text = currentUser.mobile
+            
+            if let date = dateFormatter.date(from: dob) {
+                dobPicker.date = date
+            }
         }
     }
 
     @IBAction func onSave(_ sender: UIBarButtonItem) {
         // 1. Validate all fields
         guard let title = titleTextField.text,  let surname = surnameTextField.text,
-              let givenName = givenNameTextField.text, let dob = dobTextField.text,
+              let givenName = givenNameTextField.text,
               let mobile = mobileTextField.text else {
                   displayMessage(title: "Invalid", message: "All fields must be filled.")
                   return
@@ -54,7 +65,7 @@ class UpdateDetailsViewController: UIViewController {
         currentUser?.title = title
         currentUser?.surname = surname
         currentUser?.givenname = givenName
-        currentUser?.dob = dob
+        currentUser?.dob = dateFormatter.string(from: dobPicker.date)
         currentUser?.mobile = mobile
         
         // 3. Update details

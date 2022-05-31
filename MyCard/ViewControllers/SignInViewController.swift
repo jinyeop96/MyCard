@@ -7,22 +7,42 @@
 
 import UIKit
 
+
+
 class SignInViewController: UIViewController, DatabaseListener {
     // MARK: - Properties
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    
+    @IBOutlet weak var checkBoxOutlet: UIButton!
+
     let TAB_BAR_CONTROLLER_SEGUE = "tabBarControllerSegue"
     let SIGN_UP_SEGUE = "signUpSegue"
     var listenerType: ListenerType = .signIn
     var databaseController: DatabaseProtocol?
     
+    // Local storage
+    let userDefaults = UserDefaults.standard
+    let USER_EMAIL = "userEmail"
+    let USER_PASSWORD = "userPassword"
+    let REMEMBER_DETAILS = "rememberDetails"
+    
     var indicator = UIActivityIndicatorView()
     
+   
     
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Get stored details from userDefaults
+        emailTextField.text = userDefaults.string(forKey: USER_EMAIL)
+        passwordTextField.text = userDefaults.string(forKey: USER_PASSWORD)
+        if userDefaults.bool(forKey: REMEMBER_DETAILS) {
+            checkBoxOutlet.isSelected = true
+        } else {
+            checkBoxOutlet.isSelected = false
+        }
+        
         
         // Add loading indicator
         indicator.style = UIActivityIndicatorView.Style.large
@@ -67,6 +87,21 @@ class SignInViewController: UIViewController, DatabaseListener {
         
         indicator.startAnimating()
         databaseController?.signIn(email: email, password: password)
+    }
+    
+    @IBAction func checkBox(_ sender: UIButton) {
+        // https://ksk9820.tistory.com/60
+        sender.isSelected.toggle()
+        
+        if sender.isSelected {
+            userDefaults.set(emailTextField.text, forKey: USER_EMAIL)
+            userDefaults.set(passwordTextField.text, forKey: USER_PASSWORD)
+            userDefaults.set(true, forKey: REMEMBER_DETAILS)
+        } else {
+            userDefaults.set("", forKey: USER_EMAIL)
+            userDefaults.set("", forKey: USER_PASSWORD)
+            userDefaults.set(false, forKey: REMEMBER_DETAILS)
+        }
     }
     
     

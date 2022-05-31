@@ -12,10 +12,11 @@ class SignUpViewController: UIViewController, DatabaseListener {
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var surnameTextField: UITextField!
     @IBOutlet weak var givennameTextField: UITextField!
-    @IBOutlet weak var dobTextField: UITextField!
     @IBOutlet weak var mobileTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var dobPicker: UIDatePicker!
+    let dateFormatter = DateFormatter()
     
     var databaseController: DatabaseProtocol?
     var listenerType: ListenerType = .signUp
@@ -25,6 +26,8 @@ class SignUpViewController: UIViewController, DatabaseListener {
     // MARK: - On view load
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setDateFormatter(dateFormatter: dateFormatter)
         
     
         // Add loading indicator
@@ -36,11 +39,12 @@ class SignUpViewController: UIViewController, DatabaseListener {
             indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
         
-        
-
         // Get reference to the Firestore database upon the view load
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
+        databaseController = getDatabaseController()
+        
+        // Set datePicker max
+        // https://stackoverflow.com/questions/10494174/minimum-and-maximum-date-in-uidatepicker
+        dobPicker.maximumDate = Calendar.current.date(byAdding: .year, value: 0, to: Date())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,7 +85,6 @@ class SignUpViewController: UIViewController, DatabaseListener {
         guard let title = titleTextField.text,
               let surname = surnameTextField.text,
               let givenname = givennameTextField.text,
-              let dob = dobTextField.text,
               let mobile = mobileTextField.text,
               let email = emailTextField.text,
               let password = passwordTextField.text, password.count >= 6 else {
@@ -94,7 +97,7 @@ class SignUpViewController: UIViewController, DatabaseListener {
         user.title = title
         user.surname = surname
         user.givenname = givenname
-        user.dob = dob
+        user.dob = dateFormatter.string(from: dobPicker.date)
         user.mobile = mobile
         user.email = email
         
