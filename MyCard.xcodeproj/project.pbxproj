@@ -22,6 +22,7 @@
 		D8C3953B28402133002EFAF0 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3953A28402133002EFAF0 /* MenuViewController.swift */; };
 		D8C3953D28454307002EFAF0 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3953C28454307002EFAF0 /* ResetPasswordViewController.swift */; };
 		D8C3953F284547DB002EFAF0 /* UIViewController+getReferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3953E284547DB002EFAF0 /* UIViewController+getReferences.swift */; };
+		D8C39541284654FA002EFAF0 /* UpdateDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C39540284654FA002EFAF0 /* UpdateDetailsViewController.swift */; };
 		D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3A281529380040A2A2 /* AppDelegate.swift */; };
 		D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3C281529380040A2A2 /* SceneDelegate.swift */; };
 		D8C75A42281529380040A2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C75A40281529380040A2A2 /* Main.storyboard */; };
@@ -61,6 +62,7 @@
 		D8C3953A28402133002EFAF0 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		D8C3953C28454307002EFAF0 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		D8C3953E284547DB002EFAF0 /* UIViewController+getReferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+getReferences.swift"; sourceTree = "<group>"; };
+		D8C39540284654FA002EFAF0 /* UpdateDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDetailsViewController.swift; sourceTree = "<group>"; };
 		D8C75A37281529380040A2A2 /* MyCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C75A3A281529380040A2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C75A3C281529380040A2A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 				D8C39538283FB0A5002EFAF0 /* EditViewController.swift */,
 				D8C3953A28402133002EFAF0 /* MenuViewController.swift */,
 				D8C3953C28454307002EFAF0 /* ResetPasswordViewController.swift */,
+				D8C39540284654FA002EFAF0 /* UpdateDetailsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8C39541284654FA002EFAF0 /* UpdateDetailsViewController.swift in Sources */,
 				D8C75A73281540890040A2A2 /* User.swift in Sources */,
 				D8C75A612815366C0040A2A2 /* NewCardViewController.swift in Sources */,
 				D8C3953F284547DB002EFAF0 /* UIViewController+getReferences.swift in Sources */,

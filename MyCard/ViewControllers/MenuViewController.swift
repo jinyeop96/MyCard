@@ -12,6 +12,7 @@ class MenuViewController: UIViewController, ResetPasswordProtocol {
     var databaseController: DatabaseProtocol?
     
     let RESET_PASSWORD_SEGUE = "resetPasswordSegue"
+    let UPDATE_DETAILS_SEGUE = "updateDetailsSegue"
     
 
     override func viewDidLoad() {
@@ -30,10 +31,15 @@ class MenuViewController: UIViewController, ResetPasswordProtocol {
     
 
     @IBAction func onSignOut(_ sender: Any) {
-        databaseController?.signOut()
-        if let signInViewController = self.storyboard?.instantiateViewController(withIdentifier: "SignInViewController") as? SignInViewController {
-            present(signInViewController, animated: true, completion: nil)
-        }
+        // create the alert
+        let alertController = UIAlertController(title: "Sign Out?", message: "You can always sign back in later.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in
+            self.databaseController?.signOut()
+        }))
+        
+        // Prompt user
+        self.present(alertController, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -42,6 +48,24 @@ class MenuViewController: UIViewController, ResetPasswordProtocol {
             destination.delegate = self
             destination.databaseController = databaseController
         }
+        
+        if segue.identifier == UPDATE_DETAILS_SEGUE {
+            let destination = segue.destination as! UpdateDetailsViewController
+            destination.databaseController = databaseController
+            destination.currentUser = getCurrentUser(databaseController: databaseController)
+        }
+        
+    }
+    @IBAction func onDeleteAccount(_ sender: Any) {
+        // create the alert
+        let alertController = UIAlertController(title: "Warning", message: "Would you like to delete account? All cards will also be deleted.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in
+            self.databaseController?.deleteUser()
+        }))
+        
+        // Prompt user
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - Delegation

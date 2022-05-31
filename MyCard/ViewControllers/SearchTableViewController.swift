@@ -23,9 +23,6 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        businessCards.removeAll()
-        personalCards.removeAll()
-        
         // Set database controller
         databaseController = getDatabaseController()
 
@@ -107,6 +104,7 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
         }
     }
     
+    
     // MARK: - Database specific methods
     func didSearchCards(cards: [Card]){
         businessCards.removeAll()
@@ -183,11 +181,11 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating,
         // Do Nothing
     }
     
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+    func onUserCardsChanges(userCards: [Card]) {
         // Do Nothing
     }
     
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+    func onContactCardsChange(contactCards: [Card]) {
         // Do Nothing
     }
 

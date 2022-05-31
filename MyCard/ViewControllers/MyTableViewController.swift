@@ -99,7 +99,7 @@ class MyTableViewController: UITableViewController, DatabaseListener, NewCardDel
 
     
     // MARK: - Database specific methods
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+    func onUserCardsChanges(userCards: [Card]) {
         businessCards.removeAll()
         personalCards.removeAll()
         
@@ -171,7 +171,7 @@ class MyTableViewController: UITableViewController, DatabaseListener, NewCardDel
         // Do Nothing
     }
     
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+    func onContactCardsChange(contactCards: [Card]) {
         // Do Nothing
     }
 }

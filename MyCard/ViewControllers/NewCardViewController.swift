@@ -39,6 +39,8 @@ class NewCardViewController: UIViewController{
         // Set mobile detail upon view laods
         mobileTextField.text = user?.mobile ?? ""
         
+        setKeyboardDismiss(view: self.view)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

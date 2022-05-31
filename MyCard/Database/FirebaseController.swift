@@ -110,13 +110,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 setUpUserListener(email: email)
                 
                 // 3. After login is done, maybe put this in the login web service completion block
-                // https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
-                let storyboard = await UIStoryboard(name: "Main", bundle: nil)
-                let mainTabBarController = await storyboard.instantiateViewController(identifier: "MainTabBarController")
-                
-                // This is to get the SceneDelegate object from your view controller
-                // then call the change root view controller function to change to main tab bar
-                await (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+                self.switchRootViewController(identifier: "MainTabBarController")
                 
             } catch {
                 await MainActor.run {
@@ -132,14 +126,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
             do {
                 // Try Sign out
                 try authController.signOut()
-               
                 
-                // Switch root view controller to the Sign In view controller
-                // https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
-                let storyboard = await UIStoryboard(name: "Main", bundle: nil)
-                let signInNavigationController = await storyboard.instantiateViewController(identifier: "SignInNavigationController")
-
-                await (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(signInNavigationController)
+                // Remove all cards
+                allCards.removeAll()
+                userCards.removeAll()
+                contactsCards.removeAll()
+               
+                self.switchRootViewController(identifier: "SignInNavigationController")
+                
             } catch let signOutError as NSError {
                 print("Error signing out: %@", signOutError)
             }
@@ -147,8 +141,50 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
     }
     
-    func deleteUser(user: User) {
-        //
+    // It deletes all individual cards first, and from users collection.
+    // It then deletes from Google authentication
+    func deleteUser() {
+        // 1. Remove all user's cards
+        for card in userCards {
+            removeCard(card: card)
+        }
+
+        if let individualCardId = currentUser?.individualCardId, let contactId = currentUser?.contactId, let userId = currentUser?.id {
+            // 2. Remove individual card document
+            individualCardsRef?.document(individualCardId).delete()
+            
+            // 3. Remove contact document
+            contactsRef?.document(contactId).delete()
+            
+            // 4. Remove user detail document
+            usersRef?.document(userId).delete()
+        }
+
+        // 5. Delete user authentication
+        authController.currentUser?.delete(completion: { error in
+            if let error = error {
+                print(error)
+            } else {
+                print("deleted")
+            }
+        })
+
+        // 6. Back to Sign In page
+        switchRootViewController(identifier: "SignInNavigationController")
+    }
+    
+    func updateUser(user: User) -> Bool {
+        if let userId = user.id, let userRef = usersRef?.document(userId) {
+            userRef.updateData(["title": user.title ?? ""])
+            userRef.updateData(["surname": user.surname ?? ""])
+            userRef.updateData(["givenname": user.givenname ?? ""])
+            userRef.updateData(["dob": user.dob ?? ""])
+            userRef.updateData(["mobile": user.mobile ?? ""])
+            
+            return true
+        }
+        
+        return false
     }
     
     func updatePassword(password: String) {
@@ -209,6 +245,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
             cardRef.updateData(["git": card.git ?? ""])
             cardRef.updateData(["companyName": card.companyName ?? ""])
             cardRef.updateData(["address": card.address ?? ""])
+            cardRef.updateData(["name": card.name ?? ""])
+            cardRef.updateData(["nameLowercased": card.nameLowercased ?? ""])
+            cardRef.updateData(["title": card.title ?? ""])
+            
                 
             return true
         }
@@ -258,6 +298,17 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
     }
     
+    func switchRootViewController(identifier: String) {
+        // Switch root view controller between Sign In page and Main pages
+        // https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
+        Task {
+            let storyboard = await UIStoryboard(name: "Main", bundle: nil)
+            let switchingNavigationController = await storyboard.instantiateViewController(identifier: identifier)
+            
+            await (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(switchingNavigationController)
+        }
+    }
+    
     
     // MARK: - FirebaseController specific methods
     // This delivers the appropriate signs to the corresponding listeners
@@ -276,11 +327,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
             
             if listenerType == .my && successful{
-                listener.onUserCardsChanges(change: .update, userCards: userCards)
+                listener.onUserCardsChanges(userCards: userCards)
             }
             
             if listenerType == .contacts && successful{
-                listener.onContactCardsChange(change: .update, contactCards: contactsCards)
+                listener.onContactCardsChange(contactCards: contactsCards)
             }
         }
     }
@@ -328,7 +379,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
         var parsedCard: Card?
       
         snapshot.documentChanges.forEach{ (change) in
-
             // 1. For each document, parse into card object
             do {
                 parsedCard = try change.document.data(as: Card.self)
@@ -419,4 +469,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
         return nil
     }
+    
+    
+
 }

@@ -34,8 +34,9 @@ class SignInViewController: UIViewController, DatabaseListener {
         ])
         
         // Get reference to the Firebase controller
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        databaseController = appDelegate.databaseController
+        databaseController = getDatabaseController()
+        
+        setKeyboardDismiss(view: self.view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,7 +79,7 @@ class SignInViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+    func onUserCardsChanges(userCards: [Card]) {
         // Do Nothing
     }
     
@@ -86,7 +87,7 @@ class SignInViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+    func onContactCardsChange(contactCards: [Card]) {
         // Do Nothing
     }
 }

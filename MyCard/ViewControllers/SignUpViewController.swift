@@ -109,14 +109,13 @@ class SignUpViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     
-    func onUserCardsChanges(change: ListenerType, userCards: [Card]) {
+    func onUserCardsChanges(userCards: [Card]) {
         // Do Nothing
     }
     
     func didSearchCards(cards: [Card]) {
         // Do Nothing
     }
-    func onContactCardsChange(change: ListenerType, contactCards: [Card]) {
+    func onContactCardsChange(contactCards: [Card]) {
         // Do Nothing
-    }
-}
+    }}

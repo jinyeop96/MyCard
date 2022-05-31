@@ -27,6 +27,8 @@ class ResetPasswordViewController: UIViewController {
         super.viewDidLoad()
 
         tabBarController?.tabBar.isHidden = true
+        
+        setKeyboardDismiss(view: self.view)
     }
 
     

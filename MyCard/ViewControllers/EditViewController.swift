@@ -61,6 +61,7 @@ class EditViewController: UIViewController{
             }
         }
         
+        setKeyboardDismiss(view: self.view)
     }
     
     
