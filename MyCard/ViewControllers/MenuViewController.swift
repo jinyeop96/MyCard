@@ -47,7 +47,7 @@ class MenuViewController: UIViewController {
         }
         
         if segue.identifier == UPDATE_DETAILS_SEGUE {
-            let destination = segue.destination as! UpdateDetailsViewController
+            let destination = segue.destination as! UserDetailViewController
             destination.databaseController = databaseController
             destination.currentUser = getCurrentUser(databaseController: databaseController)
         }

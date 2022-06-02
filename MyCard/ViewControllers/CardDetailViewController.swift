@@ -123,8 +123,9 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
         }
         
         if segue.identifier == COMPANY_DETAIL_SEGUE {
-            let destination = segue.destination as! CompanyDetailTableViewController
+            let destination = segue.destination as! DetailTableViewController
             destination.card = self.card
+            destination.displayCompanyDetails = true
         }
         
         if segue.identifier == EDIT_SEGUE {

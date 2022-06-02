@@ -40,7 +40,7 @@ protocol DatabaseProtocol: AnyObject {
     func updateUser(user: User) -> Bool
     func updatePassword(password: String) 
     func signUp(user: User, email: String, password: String) 
-    func signIn(email: String, password: String)
+    func signIn(email: String, password: String, rememberDetail: Bool)
     func signOut()
     
     // Cards

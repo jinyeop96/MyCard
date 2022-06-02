@@ -14,6 +14,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
     // MARK: - Properties
     var listeners = MulticastDelegate<DatabaseListener>()
     
+    // Local storage
+    let userDefaults = UserDefaults.standard
     var authController: Auth
     var database: Firestore
     
@@ -100,7 +102,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     // This fuction attempts to sign in with input email and password.
-    func signIn(email: String, password: String) {
+    func signIn(email: String, password: String, rememberDetail: Bool) {
         Task {
             do {
                 // 1. Try siging in with email and password
@@ -109,7 +111,16 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 // 2. Access to the user document with provided email and set currentUser
                 setUpUserListener(email: email)
                 
-                // 3. After Signing in is successful, switch the root view controller to the MainTabBarController
+                // 3. Set local storage for remembering signing in details
+                if rememberDetail {
+                    userDefaults.set(email, forKey: "email")
+                    userDefaults.set(password, forKey: "password")
+                    userDefaults.set(true, forKey: "rememberDetail")
+                } else {
+                   eraseSignInDetails()
+                }
+                
+                // 4. After Signing in is successful, switch the root view controller to the MainTabBarController
                 self.switchRootViewController(identifier: "MainTabBarController")
                 
             } catch {
@@ -159,6 +170,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
             // 4. Remove user detail document
             usersRef?.document(userId).delete()
+            
+            // 5. Erase signing in detail
+            eraseSignInDetails()
         }
 
         // 5. Delete user authentication
@@ -182,6 +196,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
             userRef.updateData(["dob": user.dob ?? ""])
             userRef.updateData(["mobile": user.mobile ?? ""])
             
+            self.currentUser = user
+            
             return true
         }
         
@@ -190,6 +206,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     func updatePassword(password: String) {
         authController.currentUser?.updatePassword(to: password) {error in
+            // Erase stroed user sigining in details in the local stroage
+            self.eraseSignInDetails()
             return
         }
     }
@@ -463,6 +481,12 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
         
         return nil
+    }
+    
+    private func eraseSignInDetails() {
+        self.userDefaults.set("", forKey: "email")
+        self.userDefaults.set("", forKey: "password")
+        self.userDefaults.set(false, forKey: "rememberDetail")
     }
     
     

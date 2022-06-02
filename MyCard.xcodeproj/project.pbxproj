@@ -26,6 +26,8 @@
 		D8C395462847CA47002EFAF0 /* DisplayingCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C395452847CA46002EFAF0 /* DisplayingCards.swift */; };
 		D8C3954828483EF3002EFAF0 /* CardsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3954728483EF3002EFAF0 /* CardsListTableViewController.swift */; };
 		D8C3954B284843A4002EFAF0 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3954A284843A4002EFAF0 /* UIViewControllerExtension.swift */; };
+		D8C3954D28485923002EFAF0 /* DetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3954C28485923002EFAF0 /* DetailsTableViewController.swift */; };
+		D8C3954F2848F27A002EFAF0 /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3954E2848F27A002EFAF0 /* UserDetailViewController.swift */; };
 		D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3A281529380040A2A2 /* AppDelegate.swift */; };
 		D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3C281529380040A2A2 /* SceneDelegate.swift */; };
 		D8C75A42281529380040A2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C75A40281529380040A2A2 /* Main.storyboard */; };
@@ -69,6 +71,8 @@
 		D8C395452847CA46002EFAF0 /* DisplayingCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayingCards.swift; sourceTree = "<group>"; };
 		D8C3954728483EF3002EFAF0 /* CardsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsListTableViewController.swift; sourceTree = "<group>"; };
 		D8C3954A284843A4002EFAF0 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		D8C3954C28485923002EFAF0 /* DetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsTableViewController.swift; sourceTree = "<group>"; };
+		D8C3954E2848F27A002EFAF0 /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		D8C75A37281529380040A2A2 /* MyCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C75A3A281529380040A2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C75A3C281529380040A2A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -134,12 +138,16 @@
 		D8C3954928483F92002EFAF0 /* Deprecated */ = {
 			isa = PBXGroup;
 			children = (
+				D8C39527283270CA002EFAF0 /* CompanyDetailTableViewController.swift */,
+				D8C395422847BD3A002EFAF0 /* AboutTableViewController.swift */,
 				D8C75A582815321D0040A2A2 /* MyTableViewController.swift */,
 				D8C75A5A281532290040A2A2 /* ContactsTableViewController.swift */,
 				D8C75A5C281532330040A2A2 /* SearchTableViewController.swift */,
 				D835BE5228205C580050B8BF /* UITableViewController+displayingCards.swift */,
 				D8C75A6F281540420040A2A2 /* UIViewController+displayMessage.swift */,
 				D8C3953E284547DB002EFAF0 /* UIViewController+getReferences.swift */,
+				D8C75A6628153C570040A2A2 /* SignUpViewController.swift */,
+				D8C39540284654FA002EFAF0 /* UpdateDetailsViewController.swift */,
 			);
 			path = Deprecated;
 			sourceTree = "<group>";
@@ -182,8 +190,6 @@
 		D8C75A57281531FE0040A2A2 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				D8C39527283270CA002EFAF0 /* CompanyDetailTableViewController.swift */,
-				D8C75A6628153C570040A2A2 /* SignUpViewController.swift */,
 				D8C75A602815366C0040A2A2 /* NewCardViewController.swift */,
 				D8C75A6428153C4E0040A2A2 /* SignInViewController.swift */,
 				D835BE4D28186A980050B8BF /* CardDetailViewController.swift */,
@@ -193,9 +199,9 @@
 				D8C39538283FB0A5002EFAF0 /* EditViewController.swift */,
 				D8C3953A28402133002EFAF0 /* MenuViewController.swift */,
 				D8C3953C28454307002EFAF0 /* ResetPasswordViewController.swift */,
-				D8C39540284654FA002EFAF0 /* UpdateDetailsViewController.swift */,
-				D8C395422847BD3A002EFAF0 /* AboutTableViewController.swift */,
 				D8C3954728483EF3002EFAF0 /* CardsListTableViewController.swift */,
+				D8C3954C28485923002EFAF0 /* DetailsTableViewController.swift */,
+				D8C3954E2848F27A002EFAF0 /* UserDetailViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -320,8 +326,10 @@
 				D8C39522282A5ABB002EFAF0 /* Individual.swift in Sources */,
 				D8D7B8632817E9280073A97B /* FirebaseController.swift in Sources */,
 				D835BE5A28216F890050B8BF /* LocationAnnotation.swift in Sources */,
+				D8C3954D28485923002EFAF0 /* DetailsTableViewController.swift in Sources */,
 				D8C75A5B281532290040A2A2 /* ContactsTableViewController.swift in Sources */,
 				D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */,
+				D8C3954F2848F27A002EFAF0 /* UserDetailViewController.swift in Sources */,
 				D8C3954B284843A4002EFAF0 /* UIViewControllerExtension.swift in Sources */,
 				D8C39528283270CA002EFAF0 /* CompanyDetailTableViewController.swift in Sources */,
 				D8C75A592815321D0040A2A2 /* MyTableViewController.swift in Sources */,

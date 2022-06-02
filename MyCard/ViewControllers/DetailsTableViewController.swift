@@ -1,13 +1,13 @@
 //
-//  CompanyDetailTableViewController.swift
+//  DetailsTableViewController.swift
 //  MyCard
 //
-//  Created by JINYEOP OH on 2022/05/16.
+//  Created by JINYEOP OH on 2022/06/02.
 //
 
 import UIKit
 
-class CompanyDetailTableViewCell: UITableViewCell {
+class DetailsTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var detailedDescriptionLabel: UILabel!
@@ -26,12 +26,21 @@ class CompanyDetailTableViewCell: UITableViewCell {
 
 }
 
-class CompanyDetailTableViewController: UITableViewController {
+class DetailTableViewController: UITableViewController {
     // MARK: - Properties
     var card: Card?
+    
     let API_KEY = "AIzaSyAA4vtL6kDKCeSxWnGuMmVhE9n61UWNol8"
-    let CARD_DETAIL_CELL_IDENTIFIER = "cardDetailCell"
-    var details: [CompanyDetail] = []
+    let DETAILS_CELL = "detailsCell"
+    
+    var details: [CompanyDetail] = []   // Used for decoding company details
+    let libraries = [
+        ["Firebase  (FIrebaseAuth, Firestore)",
+         "Copyright 2017-2022 Google",
+         "Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at \n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License."]
+    ]
+    
+    var displayCompanyDetails = false
     var indicator = UIActivityIndicatorView()
     
 
@@ -39,7 +48,7 @@ class CompanyDetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 1. loading indicator
+        // 1. Set loading indicator
         indicator.style = UIActivityIndicatorView.Style.large
         indicator.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(indicator)
@@ -48,11 +57,19 @@ class CompanyDetailTableViewController: UITableViewController {
             indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
         
-        // 1.1 Start loading indicator as the view loads
-        indicator.startAnimating()
+        // Only if it needs to get company details from Google Knowledge graph API
+        if displayCompanyDetails {
+            
+            if let card = card, let company = card.companyName {
+                navigationItem.title = "\(company) details" // Set company description title
+            }
+            
+            getCompanyDetails()
+            indicator.startAnimating()
+        } else {
+            navigationItem.title = "About" // Set About title
+        }
         
-        // 2. get company details from Google Knowledge graph API
-        getCompanyDetails()
     }
 
     // MARK: - Table view data source
@@ -61,23 +78,46 @@ class CompanyDetailTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return details.count
+        if displayCompanyDetails {
+            return details.count
+        }
+        return libraries.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CARD_DETAIL_CELL_IDENTIFIER, for: indexPath) as! CompanyDetailTableViewCell
-
-        let detail = details[indexPath.row].detail
+        let cell = tableView.dequeueReusableCell(withIdentifier: DETAILS_CELL, for: indexPath) as! DetailsTableViewCell
         
-        cell.nameLabel.text = detail.name ?? ""
-        cell.nameLabel.numberOfLines = 0
+        var name: String?
+        var description: String?
+        var detailedDescription: String?
         
-        cell.descriptionLabel.text = detail.description ?? ""
-        cell.descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        if displayCompanyDetails {
+            let detail = details[indexPath.row].detail
+            name = detail.name
+            description = detail.description
+            detailedDescription = detail.detailedDescription?.articleBody ?? "No detailed description."
+            
+        } else {
+            name = libraries[indexPath.row][0]
+            description = libraries[indexPath.row][1]
+            detailedDescription = libraries[indexPath.row][2]
+        }
         
-        cell.detailedDescriptionLabel.text = detail.detailedDescription?.articleBody ?? "No detailed description."
-        cell.detailedDescriptionLabel.numberOfLines = 0
+        if let name = name {
+            cell.nameLabel.text = name
+            cell.nameLabel.numberOfLines = 0
+        }
+        
+        if let description = description {
+            cell.descriptionLabel.text = description
+            cell.descriptionLabel.numberOfLines = 0
+        }
+        
+        if let detailedDescription = detailedDescription {
+            cell.detailedDescriptionLabel.text = detailedDescription
+            cell.detailedDescriptionLabel.numberOfLines = 0
+        }
         
         return cell
     }

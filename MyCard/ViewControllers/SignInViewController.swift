@@ -15,7 +15,6 @@ class SignInViewController: UIViewController, DatabaseListener {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var checkBoxOutlet: UIButton!
 
-    let TAB_BAR_CONTROLLER_SEGUE = "tabBarControllerSegue"
     let SIGN_UP_SEGUE = "signUpSegue"
     var listenerType: ListenerType = .signIn
     var databaseController: DatabaseProtocol?
@@ -35,9 +34,9 @@ class SignInViewController: UIViewController, DatabaseListener {
         super.viewDidLoad()
         
         // Get stored details from userDefaults
-        emailTextField.text = userDefaults.string(forKey: USER_EMAIL)
-        passwordTextField.text = userDefaults.string(forKey: USER_PASSWORD)
-        if userDefaults.bool(forKey: REMEMBER_DETAILS) {
+        emailTextField.text = userDefaults.string(forKey: "email")
+        passwordTextField.text = userDefaults.string(forKey: "password")
+        if userDefaults.bool(forKey: "rememberDetail") {
             checkBoxOutlet.isSelected = true
         } else {
             checkBoxOutlet.isSelected = false
@@ -78,32 +77,26 @@ class SignInViewController: UIViewController, DatabaseListener {
 
     // MARK: - This view specific methods
     @IBAction func onSignIn(_ sender: UIButton) {
-        guard let email = emailTextField.text,
-              let password = passwordTextField.text,
-              password.count >= 6 else {
+        guard let email = emailTextField.text, let password = passwordTextField.text, password.count >= 6 else {
                   displayMessage(title: "Invalid", message: "Provided detail(s) invalid.")
                   return
               }
         
         indicator.startAnimating()
-        databaseController?.signIn(email: email, password: password)
+        databaseController?.signIn(email: email, password: password, rememberDetail: checkBoxOutlet.isSelected)
     }
     
     @IBAction func checkBox(_ sender: UIButton) {
-        // https://ksk9820.tistory.com/60
         sender.isSelected.toggle()
-        
-        if sender.isSelected {
-            userDefaults.set(emailTextField.text, forKey: USER_EMAIL)
-            userDefaults.set(passwordTextField.text, forKey: USER_PASSWORD)
-            userDefaults.set(true, forKey: REMEMBER_DETAILS)
-        } else {
-            userDefaults.set("", forKey: USER_EMAIL)
-            userDefaults.set("", forKey: USER_PASSWORD)
-            userDefaults.set(false, forKey: REMEMBER_DETAILS)
-        }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "signUpSegue" {
+            let destination = segue.destination as! UserDetailViewController
+            destination.databaseController = databaseController
+            destination.isSigningUp = true
+        }
+    }
     
     // MARK: - Unnecessary inherited methods
     func didSucceedSignUp() {
