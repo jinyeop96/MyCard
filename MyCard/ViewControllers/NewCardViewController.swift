@@ -35,6 +35,7 @@ class NewCardViewController: UIViewController{
         // Set mobile detail upon view laods
         mobileTextField.text = user?.mobile ?? ""
         
+        // Enabling the keyboard dismisses when user taps else where
         setKeyboardDismiss(view: self.view)
         
     }
@@ -47,10 +48,9 @@ class NewCardViewController: UIViewController{
     
     // MARK: - View specific methods
     
-    // This method is invoked when the user touches 'Create Card' button.
+    // This method is invoked when the user touches 'Save' RightBarButtonItem.
     // It then check whether or not all required fileds are filled.
     // If so, it assigns user's details in a Card object, otherwise it displays appropriate message to fill the empty fields.
-
     @IBAction func onSaveCard(_ sender: UIButton) {
         let card = Card()
         card.isPersonal = true

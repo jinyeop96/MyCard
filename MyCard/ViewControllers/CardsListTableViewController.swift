@@ -176,6 +176,8 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         }
     }
     
+    
+    // MARK: - This view specific methods
     // BarButtonItem appears iff user is on 'My' or 'Search' tab. If it is tapped, it performs a segue
     @objc func barButtonTapped(sender: Any) {
         if let currentTab = currentTab {
@@ -186,9 +188,46 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
             if currentTab == SEARCH_TAB {
                 performSegue(withIdentifier: SCANNER_SEGUE, sender: self)
             }
+        }
+    }
+    
+    private func assignCardOnCell(indexPath: IndexPath) -> UITableViewCell {
+        var cell: UITableViewCell?
+        var card: Card?
+    
+        if indexPath.section == BUSINESS_CARD_SECTION {
+            cell = tableView.dequeueReusableCell(withIdentifier: BUSINESS_CARD_CELL, for: indexPath)
+            card = displayingCards.getBusinessCardAt(row: indexPath.row)
+        } else {
+            cell = tableView.dequeueReusableCell(withIdentifier: PERSONAL_CARD_CELL, for: indexPath)
+            card = displayingCards.getPersonalCardAt(row: indexPath.row)
+        }
+         
+        if let cell = cell, let card = card {
+            var content = cell.defaultContentConfiguration()
             
+            if indexPath.section == BUSINESS_CARD_SECTION {
+                content.text = card.companyName ?? ""
+                content.secondaryText = card.name ?? ""
+            }
+            
+            if indexPath.section == PERSONAL_CARD_SECTION {
+                content.text = card.name ?? ""
+                content.secondaryText = card.address ?? ""
+            }
+            
+            cell.contentConfiguration = content
         }
         
+       return cell! // Since the cell is surely assigned, we can safely force unwrap
+    }
+    
+    private func assignInfoCell(indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: INFO_CELL, for: indexPath)
+        var content = cell.defaultContentConfiguration()
+        content.text = "\(displayingCards.getBusinessCardsCount()) business and \(displayingCards.getPersonalCardsCount()) personal cards in the list."
+        cell.contentConfiguration = content
+        return cell
     }
     
     
@@ -268,45 +307,7 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         }
     }
     
-    private func assignCardOnCell(indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell?
-        var card: Card?
     
-        if indexPath.section == BUSINESS_CARD_SECTION {
-            cell = tableView.dequeueReusableCell(withIdentifier: BUSINESS_CARD_CELL, for: indexPath)
-            card = displayingCards.getBusinessCardAt(row: indexPath.row)
-        } else {
-            cell = tableView.dequeueReusableCell(withIdentifier: PERSONAL_CARD_CELL, for: indexPath)
-            card = displayingCards.getPersonalCardAt(row: indexPath.row)
-        }
-         
-        if let cell = cell, let card = card {
-            var content = cell.defaultContentConfiguration()
-            
-            if indexPath.section == BUSINESS_CARD_SECTION {
-                content.text = card.companyName ?? ""
-                content.secondaryText = card.name ?? ""
-            }
-            
-            if indexPath.section == PERSONAL_CARD_SECTION {
-                content.text = card.name ?? ""
-                content.secondaryText = card.address ?? ""
-            }
-            
-            cell.contentConfiguration = content
-        }
-        
-       return cell! // Since the cell is surely assigned, we can safely force unwrap
-    }
-    
-    private func assignInfoCell(indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: INFO_CELL, for: indexPath)
-        var content = cell.defaultContentConfiguration()
-        content.text = "\(displayingCards.getBusinessCardsCount()) business and \(displayingCards.getPersonalCardsCount()) personal cards in the list."
-        cell.contentConfiguration = content
-        return cell
-    }
-
     // MARK: - Unneccessary inherited methods
     func didSucceedSignUp() {
         // Do nothing

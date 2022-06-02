@@ -7,18 +7,11 @@
 
 import UIKit
 
-protocol ResetPasswordProtocol: AnyObject{
-    func updateNewPassword(password: String)
-}
-
 class ResetPasswordViewController: UIViewController {
-
-    
     // MARK: - Properties
     @IBOutlet weak var newPassword1TextField: UITextField!
     @IBOutlet weak var newPassword2TextField: UITextField!
     
-    weak var delegate: ResetPasswordProtocol?
     var databaseController: DatabaseProtocol?
     
 
@@ -32,7 +25,7 @@ class ResetPasswordViewController: UIViewController {
     }
 
     
-
+    // MARK: - View specific methods
     @IBAction func onSave(_ sender: UIBarButtonItem) {
         if let newPassword1 = newPassword1TextField.text, let newPassword2 = newPassword2TextField.text {
             // 1. Check given passwords are the same
@@ -46,10 +39,22 @@ class ResetPasswordViewController: UIViewController {
                 return
             }
             
+            // 2. Prompt user to double check for updating the password
+            let alertController = UIAlertController(title: "Update password?", message: "Are you sure for updating a new password?.", preferredStyle: .alert)
             
-            // 2. Proceed to update passwords 
-            delegate?.updateNewPassword(password: newPassword1)
-            navigationController?.popViewController(animated: true)
+            // 2.1 Add cancel and ok buttons
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in
+                // 2.2 Update a new password and return to the previous page
+                if let databaseController = self.databaseController {
+                    databaseController.updatePassword(password: newPassword1)
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }))
+            
+            // Prompt user
+            self.present(alertController, animated: true, completion: nil)
+
         }
     }
 }

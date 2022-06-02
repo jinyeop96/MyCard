@@ -33,9 +33,6 @@ class EditViewController: UIViewController{
     // MARK: - On view loads
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Set database controller
-        databaseController = getDatabaseController()
 
         // Load the card details onto the fields
         if let card = card, let isPersonal = card.isPersonal{
@@ -61,6 +58,7 @@ class EditViewController: UIViewController{
             }
         }
         
+        // Enabling keyboard dismisses when the user taps else where
         setKeyboardDismiss(view: self.view)
     }
     

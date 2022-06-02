@@ -47,6 +47,8 @@ class CompanyDetailTableViewController: UITableViewController {
             indicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
+        
+        // 1.1 Start loading indicator as the view loads
         indicator.startAnimating()
         
         // 2. get company details from Google Knowledge graph API
@@ -127,7 +129,7 @@ class CompanyDetailTableViewController: UITableViewController {
                     self.indicator.stopAnimating()
                     self.tableView.reloadData()
                 } catch {
-                    print(error)
+                    displayMessage(title: "Error", message: "Error occured while getting the company details. Try again.")
                 }
             }
         }

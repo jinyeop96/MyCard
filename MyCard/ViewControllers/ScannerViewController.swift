@@ -16,7 +16,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var databaseController: DatabaseProtocol?
 
     
-
     // MARK: - On View loads
     override func viewDidLoad() {
         super.viewDidLoad()

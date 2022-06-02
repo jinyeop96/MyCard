@@ -25,6 +25,7 @@
 		D8C395432847BD3A002EFAF0 /* AboutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C395422847BD3A002EFAF0 /* AboutTableViewController.swift */; };
 		D8C395462847CA47002EFAF0 /* DisplayingCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C395452847CA46002EFAF0 /* DisplayingCards.swift */; };
 		D8C3954828483EF3002EFAF0 /* CardsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3954728483EF3002EFAF0 /* CardsListTableViewController.swift */; };
+		D8C3954B284843A4002EFAF0 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3954A284843A4002EFAF0 /* UIViewControllerExtension.swift */; };
 		D8C75A3B281529380040A2A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3A281529380040A2A2 /* AppDelegate.swift */; };
 		D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C75A3C281529380040A2A2 /* SceneDelegate.swift */; };
 		D8C75A42281529380040A2A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8C75A40281529380040A2A2 /* Main.storyboard */; };
@@ -67,6 +68,7 @@
 		D8C395422847BD3A002EFAF0 /* AboutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTableViewController.swift; sourceTree = "<group>"; };
 		D8C395452847CA46002EFAF0 /* DisplayingCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayingCards.swift; sourceTree = "<group>"; };
 		D8C3954728483EF3002EFAF0 /* CardsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsListTableViewController.swift; sourceTree = "<group>"; };
+		D8C3954A284843A4002EFAF0 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		D8C75A37281529380040A2A2 /* MyCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C75A3A281529380040A2A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8C75A3C281529380040A2A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,9 +108,7 @@
 		D835BE5128205C020050B8BF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				D8C75A6F281540420040A2A2 /* UIViewController+displayMessage.swift */,
-				D835BE5228205C580050B8BF /* UITableViewController+displayingCards.swift */,
-				D8C3953E284547DB002EFAF0 /* UIViewController+getReferences.swift */,
+				D8C3954A284843A4002EFAF0 /* UIViewControllerExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -137,6 +137,9 @@
 				D8C75A582815321D0040A2A2 /* MyTableViewController.swift */,
 				D8C75A5A281532290040A2A2 /* ContactsTableViewController.swift */,
 				D8C75A5C281532330040A2A2 /* SearchTableViewController.swift */,
+				D835BE5228205C580050B8BF /* UITableViewController+displayingCards.swift */,
+				D8C75A6F281540420040A2A2 /* UIViewController+displayMessage.swift */,
+				D8C3953E284547DB002EFAF0 /* UIViewController+getReferences.swift */,
 			);
 			path = Deprecated;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				D835BE5A28216F890050B8BF /* LocationAnnotation.swift in Sources */,
 				D8C75A5B281532290040A2A2 /* ContactsTableViewController.swift in Sources */,
 				D8C75A3D281529380040A2A2 /* SceneDelegate.swift in Sources */,
+				D8C3954B284843A4002EFAF0 /* UIViewControllerExtension.swift in Sources */,
 				D8C39528283270CA002EFAF0 /* CompanyDetailTableViewController.swift in Sources */,
 				D8C75A592815321D0040A2A2 /* MyTableViewController.swift in Sources */,
 				D8C75A6D281540040040A2A2 /* MulticastDelegate.swift in Sources */,

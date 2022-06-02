@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MenuViewController: UIViewController, ResetPasswordProtocol {
+class MenuViewController: UIViewController {
     // MARK: - Properties
     var databaseController: DatabaseProtocol?
     
@@ -20,9 +20,6 @@ class MenuViewController: UIViewController, ResetPasswordProtocol {
 
         // Get database controller
         databaseController = getDatabaseController()
-        print("Menu")
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,7 +43,6 @@ class MenuViewController: UIViewController, ResetPasswordProtocol {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == RESET_PASSWORD_SEGUE{
             let destination = segue.destination as! ResetPasswordViewController
-            destination.delegate = self
             destination.databaseController = databaseController
         }
         
@@ -68,11 +64,5 @@ class MenuViewController: UIViewController, ResetPasswordProtocol {
         // Prompt user
         self.present(alertController, animated: true, completion: nil)
     }
-    
-    // MARK: - Delegation
-    func updateNewPassword(password: String) {
-        databaseController?.updatePassword(password: password)
-    }
-    
 }
 

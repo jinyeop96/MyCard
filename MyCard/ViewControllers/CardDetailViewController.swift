@@ -54,7 +54,7 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
             navigationItem.rightBarButtonItem = nil
         }
         
-        // 2. Display card details
+        // 2. Populate card details where appropriate
         setCardDetails()
         
         // 3. Enable the adderss and company details touchable
@@ -130,11 +130,13 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
         if segue.identifier == EDIT_SEGUE {
             let destination = segue.destination as! EditViewController
             destination.card = self.card
+            destination.databaseController = databaseController
             destination.delegate = self
         }
     }
     
     // MARK: - Delegation
+    // This is invoked when the user sucessfully edits a card from EditViewController, updated card will be passed and populated again.
     func updateCard(card: Card) {
         self.card = card
         setCardDetails()
