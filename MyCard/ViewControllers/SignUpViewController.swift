@@ -8,6 +8,7 @@
 import UIKit
 
 class SignUpViewController: UIViewController, DatabaseListener {
+    
     // MARK: - Properties
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var surnameTextField: UITextField!
@@ -112,13 +113,7 @@ class SignUpViewController: UIViewController, DatabaseListener {
         // Do Nothing
     }
     
-    func onUserCardsChanges(userCards: [Card]) {
-        // Do Nothing
+    func onCardsListChange(cards: [Card]) {
+        //
     }
-    
-    func didSearchCards(cards: [Card]) {
-        // Do Nothing
-    }
-    func onContactCardsChange(contactCards: [Card]) {
-        // Do Nothing
-    }}
+}

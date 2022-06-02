@@ -109,7 +109,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 // 2. Access to the user document with provided email and set currentUser
                 setUpUserListener(email: email)
                 
-                // 3. After login is done, maybe put this in the login web service completion block
+                // 3. After Signing in is successful, switch the root view controller to the MainTabBarController
                 self.switchRootViewController(identifier: "MainTabBarController")
                 
             } catch {
@@ -124,18 +124,19 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
         Task {
             do {
-                // Try Sign out
+                // 1. Try Sign out
                 try authController.signOut()
                 
-                // Remove all cards
+                // 2. Remove all cards
                 allCards.removeAll()
                 userCards.removeAll()
                 contactsCards.removeAll()
                
+                // 3. Switch root view controller to Sign In Controller
                 self.switchRootViewController(identifier: "SignInNavigationController")
                 
-            } catch let signOutError as NSError {
-                print("Error signing out: %@", signOutError)
+            } catch  {
+                print("Error signing out: \(error)")
             }
         }
         
@@ -255,21 +256,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
         return false
     }
     
-    func searchCards(searchText: String){
+    func searchCards(searchText: String) -> [Card]{
         var filteredCards: [Card] = []
         
         // Filter out searched cards out of allCards list
         filteredCards = allCards.filter( { card in
             return card.nameLowercased?.contains(searchText) ?? false && card.email != currentUser?.email
         })
-            
-        // Pass parsed card objects back to serach table view controller
-        self.listeners.invoke{ (listener) in
-            if listener.listenerType == .searchCards {
-                listener.didSearchCards(cards: filteredCards)
-            }
-        }
         
+        return filteredCards
     }
     
     // This function adds the input card ID to user's contact list
@@ -325,13 +320,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
             if listenerType == .signIn && !successful{
                 listener.didNotSucceedSignIn()
             }
-            
+
             if listenerType == .my && successful{
-                listener.onUserCardsChanges(userCards: userCards)
+                listener.onCardsListChange(cards: userCards)
             }
             
             if listenerType == .contacts && successful{
-                listener.onContactCardsChange(contactCards: contactsCards)
+                listener.onCardsListChange(cards: contactsCards)
             }
         }
     }
@@ -403,7 +398,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
         } // forEach ends
 
-        self.alertListener(listenerType: .my, successful: true)
+        //self.alertListener(listenerType: .my, successful: true)
     }
     
     private func setUpContactsListener(){

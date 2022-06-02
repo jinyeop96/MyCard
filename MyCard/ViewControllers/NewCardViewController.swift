@@ -6,9 +6,6 @@
 //
 
 import UIKit
-protocol NewCardDelegate: AnyObject{
-    func addCard(card: Card) -> Bool
-}
 
 class NewCardViewController: UIViewController{
     // MARK: - Properties
@@ -25,8 +22,7 @@ class NewCardViewController: UIViewController{
     @IBOutlet weak var companyNameLabel: UILabel!
     
     var user: User?
-    var delegate: NewCardDelegate?
-    
+    var databaseController: DatabaseProtocol?
     
     let BUSINESS_CARD = 0
     let PERSONAL_CARD = 1
@@ -99,7 +95,7 @@ class NewCardViewController: UIViewController{
     
         // 4. Add the card
         //databaseController?.addCard(card: card)
-        if let delegate = delegate, delegate.addCard(card: card) {
+        if let databaseController = databaseController, databaseController.addCard(card: card) {
              navigationController?.popViewController(animated: true)
         } else {
              displayMessage(title: "Error", message: "Card creation failed. Try again.")

@@ -20,6 +20,7 @@ class MenuViewController: UIViewController, ResetPasswordProtocol {
 
         // Get database controller
         databaseController = getDatabaseController()
+        print("Menu")
         
         
     }

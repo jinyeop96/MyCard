@@ -8,18 +8,12 @@
 import UIKit
 import AVFoundation
 
-protocol ScannerDelegate: AnyObject{
-    func addScannedCardToContact(card: Card) -> Bool
-    func getCardById(cardId: String) -> Card?
-}
-
-
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     // MARK: - Properties
     var captureSession = AVCaptureSession()
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var qrCodeFrameView: UIView?
-    var delegate: ScannerDelegate?
+    var databaseController: DatabaseProtocol?
 
     
 
@@ -103,8 +97,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             qrCodeFrameView?.frame = barCodeObject!.bounds
 
             // 1. Check if scanned data exists, then try adding it to the contact list
-            if let scannedData = metadataObj.stringValue, let delegate = delegate, let scannedCard = delegate.getCardById(cardId: scannedData), delegate.addScannedCardToContact(card: scannedCard) {
+            if let scannedData = metadataObj.stringValue, let databaseController = databaseController, let scannedCard = databaseController.getCardById(id: scannedData), databaseController.addToContact(card: scannedCard) {
                 navigationController?.popViewController(animated: true)
+                
             } else {
                 displayMessage(title: "Error", message: "No cards found in database. Please try again.")
             }

@@ -21,20 +21,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//
+//        // if user is logged in before
+//        if let loggedUsername = UserDefaults.standard.string(forKey: "username") {
+//            // instantiate the main tab bar controller and set it as root view controller
+//            // using the storyboard identifier we set earlier
+//            let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+//            window?.rootViewController = mainTabBarController
+//        } else {
+//            // if user isn't logged in
+//            // instantiate the navigation controller and set it as root view controller
+//            // using the storyboard identifier we set earlier
+//            let loginNavController = storyboard.instantiateViewController(identifier: "SignInNavigationController")
+//            window?.rootViewController = loginNavController
+//        }
         
-        // if user is logged in before
-        if let loggedUsername = UserDefaults.standard.string(forKey: "username") {
-            // instantiate the main tab bar controller and set it as root view controller
-            // using the storyboard identifier we set earlier
-            let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-            window?.rootViewController = mainTabBarController
-        } else {
-            // if user isn't logged in
-            // instantiate the navigation controller and set it as root view controller
-            // using the storyboard identifier we set earlier
-            let loginNavController = storyboard.instantiateViewController(identifier: "SignInNavigationController")
-            window?.rootViewController = loginNavController
-        }
+        let loginNavController = storyboard.instantiateViewController(identifier: "SignInNavigationController")
+        window?.rootViewController = loginNavController
     }
     
     func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {

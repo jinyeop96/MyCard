@@ -27,9 +27,7 @@ protocol DatabaseListener: AnyObject {
     func didSucceedSignUp()
     func didNotSucceedSignUp()
     func didNotSucceedSignIn()
-    func didSearchCards(cards: [Card])
-    func onUserCardsChanges(userCards: [Card])
-    func onContactCardsChange(contactCards: [Card])
+    func onCardsListChange(cards: [Card])
 }
 
 protocol DatabaseProtocol: AnyObject {
@@ -49,9 +47,10 @@ protocol DatabaseProtocol: AnyObject {
     func addCard(card: Card) -> Bool
     func removeCard(card: Card)
     func updateCard(card: Card) -> Bool
-    func searchCards(searchText: String)
+    func searchCards(searchText: String) -> [Card]
     func addToContact(card: Card) -> Bool
     func removeFromContact(card: Card)
+    func getCardById(id: String) -> Card?
     
     // Controller
     func switchRootViewController(identifier: String)

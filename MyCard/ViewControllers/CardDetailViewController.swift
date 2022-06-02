@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol CardDetailDelegate: AnyObject {
-    func addToContact(card: Card) -> Bool
-}
-
 class CardDetailViewController: UIViewController, EditCardDelegate {
     // MARK: - Properties
     @IBOutlet weak var editBarButton: UIBarButtonItem!
@@ -30,7 +26,7 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
     let EDIT_SEGUE = "editSegue"
     
     var card: Card?
-    var delegate: CardDetailDelegate?
+    var databaseController: DatabaseProtocol?
     
     var isEditable = false; // set true if segued from 'My' Section only
     var isAddable = false;  // set true if segued from 'Searching' Section only
@@ -91,7 +87,7 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
             performSegue(withIdentifier: QR_CODE_GENERATION_SEGUE, sender: self)
         } else {
             // Attempt adding this card to current user's contact list. Pop this view controller if it is successful
-            if let card = card, let delegate = delegate, delegate.addToContact(card: card) {
+            if let card = card, let databaseController = databaseController, databaseController.addToContact(card: card) {
                 navigationController?.popViewController(animated: true)
             } else {
                 displayMessage(title: "Error", message: "Fail to add the card to contact list. Try again.")
