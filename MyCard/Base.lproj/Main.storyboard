@@ -31,7 +31,7 @@
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AyT-ua-IeE">
                                 <rect key="frame" x="20" y="179" width="374" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cPe-F9-X8r">
                                 <rect key="frame" x="20" y="284" width="374" height="34"/>
@@ -104,7 +104,7 @@
             </objects>
             <point key="canvasLocation" x="5048" y="1031"/>
         </scene>
-        <!--Sign Up-->
+        <!--Sign Up/Update-->
         <scene sceneID="Rzf-YB-E87">
             <objects>
                 <viewController id="ODV-tp-lBL" customClass="UserDetailViewController" customModule="MyCard" customModuleProvider="target" sceneMemberID="viewController">
@@ -263,7 +263,7 @@
                             <constraint firstItem="DBa-io-RyH" firstAttribute="bottom" secondItem="TDB-A0-WMi" secondAttribute="bottom" id="Y6W-a9-bFB"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Sign Up" id="JMC-5o-CRn">
+                    <navigationItem key="navigationItem" title="Sign Up/Update" id="JMC-5o-CRn">
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="fyT-zv-X6h">
                             <connections>
                                 <action selector="onSave:" destination="ODV-tp-lBL" id="PTt-5S-0YS"/>

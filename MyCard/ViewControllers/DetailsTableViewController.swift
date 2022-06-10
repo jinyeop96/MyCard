@@ -30,13 +30,20 @@ class DetailTableViewController: UITableViewController {
     // MARK: - Properties
     var card: Card?
     
+    // Google Knowledge Graph API Key
     let API_KEY = "AIzaSyAA4vtL6kDKCeSxWnGuMmVhE9n61UWNol8"
     let DETAILS_CELL = "detailsCell"
     
-    var details: [CompanyDetail] = []   // Used for decoding company details
+    // Used for decoding company details, if navigated from Card detail view
+    var details: [CompanyDetail] = []
+    
+    // Used for displaying third-party aknowledgement, for About page.
     let libraries = [
         ["Firebase  (FIrebaseAuth, Firestore)",
          "Copyright 2017-2022 Google",
+         "Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at \n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License."],
+        ["Google Knowledge Graph Search API",
+         "Copyright 2022 Google",
          "Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at \n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License."]
     ]
     
@@ -64,7 +71,7 @@ class DetailTableViewController: UITableViewController {
                 navigationItem.title = "\(company) details" // Set company description title
             }
             
-            getCompanyDetails()
+            getCompanyDetails() // API Request
             indicator.startAnimating()
         } else {
             navigationItem.title = "About" // Set About title
@@ -84,7 +91,10 @@ class DetailTableViewController: UITableViewController {
         return libraries.count
     }
 
-    
+    /*
+     Displaying company details and About have the same cell structure.
+     So dependin on where it was navigated from, it assigns company details or third-party library aknowlements
+     */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DETAILS_CELL, for: indexPath) as! DetailsTableViewCell
         
@@ -92,6 +102,7 @@ class DetailTableViewController: UITableViewController {
         var description: String?
         var detailedDescription: String?
         
+        // Depending on where it was navigated from, it assigns company details or third-party library aknowlements
         if displayCompanyDetails {
             let detail = details[indexPath.row].detail
             name = detail.name
@@ -104,6 +115,7 @@ class DetailTableViewController: UITableViewController {
             detailedDescription = libraries[indexPath.row][2]
         }
         
+        // Populate data
         if let name = name {
             cell.nameLabel.text = name
             cell.nameLabel.numberOfLines = 0
@@ -132,7 +144,16 @@ class DetailTableViewController: UITableViewController {
     }
 
     
-    // MARK: - View specific methods
+    /*
+     This function makes API Request for retrieving company details.
+     It decodes the retrieved JSON object into Company object and populate them into the table view.
+     It displays an error message if any errors occur.
+     
+     The URL is from
+     https://developers.google.com/knowledge-graph
+     
+     I only acquired the request URL and search scope(Corporation and Organization).
+     */
     private func getCompanyDetails(){
         if let card = card, let companyName = card.companyName?.lowercased(){
             // 1. Construct URL query with the company name
@@ -149,12 +170,11 @@ class DetailTableViewController: UITableViewController {
             
             // 2. Check for correctness
             guard let requestURL = searchURLComponents.url else {
-             displayMessage(title: "Error", message: "Invalid URL detected! Try again.")
+             displayMessage(title: "Invalid API Request URL", message: "Invalid URL detected! Try again.")
              return
             }
             
             let urlRequest = URLRequest(url: requestURL)
-            
             Task{
                 do {
                     // 3. Get data

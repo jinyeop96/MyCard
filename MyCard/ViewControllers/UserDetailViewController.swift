@@ -32,7 +32,9 @@ class UserDetailViewController: UIViewController, DatabaseListener {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setDateFormatter(dateFormatter: dateFormatter)
+        // It sets the DateFormatter object for British date style
+        dateFormatter.locale = Locale(identifier: "en_GB")
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMMddyyyy")
         
     
         // Add loading indicator
@@ -43,16 +45,15 @@ class UserDetailViewController: UIViewController, DatabaseListener {
             indicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
-        
-        // Set datePicker max
-        // https://stackoverflow.com/questions/10494174/minimum-and-maximum-date-in-uidatepicker
+
+        //Since the date picker is used for setting birthday, it sets the UIDatePicker max as today.
         dobPicker.maximumDate = Calendar.current.date(byAdding: .year, value: 0, to: Date())
+        
+        setKeyboardDismiss(view: self.view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(barButtonTapped))
         
         // If this view appears for signing up, it should enable entering email and password
         if isSigningUp {
@@ -66,6 +67,7 @@ class UserDetailViewController: UIViewController, DatabaseListener {
         if !isSigningUp { // Editing user detail
             navigationItem.title = "Update Details"
             
+            // If it is for editing user detail, hide email and password part
             emailLabel.isHidden = true
             emailTextField.isHidden = true
             passwordLabel.isHidden = true

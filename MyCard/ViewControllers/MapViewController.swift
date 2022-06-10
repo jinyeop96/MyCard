@@ -20,7 +20,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        // Request for accessing a map
         if locationManager.authorizationStatus == .notDetermined || locationManager.authorizationStatus != .authorizedAlways {
             locationManager.requestWhenInUseAuthorization()
         }
@@ -31,10 +31,18 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         }
     }
     
-    
-    // MARK: - View specific methods
+    /*
+     This function searches the address and zoom into the location if it suceeds.
+     If it does not find any, it displays an appropriate message and discontinue.
+     
+     Search for an address is based on
+     https://www.hackingwithswift.com/example-code/location/how-to-look-up-a-location-with-mklocalsearchrequest
+     
+     I have modified the query to be the address of the self.card and chosen only the first item in response.
+     With having the first item, I have combined with Week5 material to add annotation on the map and zoom into latitude and longitude.
+     */
     private func focusMap(address: String, title: String){
-        // https://www.hackingwithswift.com/example-code/location/how-to-look-up-a-location-with-mklocalsearchrequest
+        
         // 1. Set search request with card's address
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = address

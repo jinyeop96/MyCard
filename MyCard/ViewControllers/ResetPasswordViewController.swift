@@ -21,11 +21,14 @@ class ResetPasswordViewController: UIViewController {
 
         tabBarController?.tabBar.isHidden = true
         
+        // Enabling the keyboards dismisses when it touches else where
         setKeyboardDismiss(view: self.view)
     }
 
     
-    // MARK: - View specific methods
+    /*
+     It validate the new password first, it then alerts the user with cancel and OK button.
+     */
     @IBAction func onSave(_ sender: UIBarButtonItem) {
         if let newPassword1 = newPassword1TextField.text, let newPassword2 = newPassword2TextField.text {
             // 1. Check given passwords are the same
@@ -34,6 +37,7 @@ class ResetPasswordViewController: UIViewController {
                 return
             }
             
+            // 1. Check given passwords are at least 6 characters long.
             if newPassword1.count < 6 {
                 displayMessage(title: "Invalid", message: "Password must be at least 6 characters.")
                 return

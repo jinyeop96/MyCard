@@ -15,6 +15,9 @@ extension UIViewController {
             self.present(alertController, animated: true, completion: nil)
     }
     
+    /*
+     This returns the reference to the Database Controller
+     */
     func getDatabaseController() -> DatabaseProtocol? {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if let databaseController = appDelegate.databaseController{
@@ -23,6 +26,9 @@ extension UIViewController {
         return nil
     }
     
+    /*
+     This returns the reference to the current user
+     */
     func getCurrentUser(databaseController: DatabaseProtocol?) -> User? {
         if let firebaseController = databaseController as? FirebaseController, let currentUser = firebaseController.currentUser{
             return currentUser
@@ -30,17 +36,18 @@ extension UIViewController {
         return nil
     }
     
-    // https://kaushalelsewhere.medium.com/how-to-dismiss-keyboard-in-a-view-controller-of-ios-3b1bfe973ad1
+    /*
+     This is called from the views where it needs to dismiss the keyboard after typing.
+     It enables to dismiss the keyboard when user taps other than the keyboard.
+     
+     Dismissing the keyboard is from
+     https://kaushalelsewhere.medium.com/how-to-dismiss-keyboard-in-a-view-controller-of-ios-3b1bfe973ad1
+     
+     This is the original code.
+     */
     func setKeyboardDismiss(view: UIView){
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    
-    func setDateFormatter(dateFormatter: DateFormatter){
-        // https://developer.apple.com/documentation/foundation/dateformatter
-        dateFormatter.locale = Locale(identifier: "en_GB")
-        dateFormatter.setLocalizedDateFormatFromTemplate("MMMddyyyy")
-    }
-    
 }

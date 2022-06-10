@@ -36,19 +36,19 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 1. Structure the scene appropriately
-        // Accessed from owner
+        // 1. Restructure the page depending on where it navigated from.
+        // 1.1 Navigated from 'My' tab
         if isEditable {
             optionButton.setTitle("Generate QR Code", for: .normal)
         }
         
-        // Accessed from searching
+        // 1.1 Navigated from 'Search' tab
         if isAddable {
             optionButton.setTitle("Add to Contact", for: .normal)
             navigationItem.rightBarButtonItem = nil
         }
         
-        // Accessed from contacts
+        // 1.1 Navigated from 'Contact' tab
         if !isEditable && !isAddable {
             optionButton.isHidden = true
             navigationItem.rightBarButtonItem = nil
@@ -57,13 +57,20 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
         // 2. Populate card details where appropriate
         setCardDetails()
         
-        // 3. Enable the adderss and company details touchable
-        // https://stackoverflow.com/questions/33658521/how-to-make-a-uilabel-clickable
-        let toMap = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.segueToMap))
+        /*
+         3. Enable the adderss and company details touchable
+         
+         Enabling UILabel touchable is based on
+         https://stackoverflow.com/questions/33658521/how-to-make-a-uilabel-clickable
+         
+         The examples in the source code provides how to implement UILabel touchable.
+         I simply modified to have my own functions and enabled to addressLabel and companyNameLabel.
+         */
+        let toMap = UITapGestureRecognizer(target: self, action: #selector(segueToMap))
         addressLabel.isUserInteractionEnabled = true
         addressLabel.addGestureRecognizer(toMap)
         
-        let toCompanyInfo = UITapGestureRecognizer(target: self, action: #selector(CardDetailViewController.segueToCompanyInfo))
+        let toCompanyInfo = UITapGestureRecognizer(target: self, action: #selector(segueToCompanyInfo))
         companyNameLabel.isUserInteractionEnabled = true
         companyNameLabel.addGestureRecognizer(toCompanyInfo)
         
@@ -73,24 +80,38 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
     
     
     //MARK: - This view specific methods
-    @IBAction func segueToMap(sender: UITapGestureRecognizer) {
+    /*
+     This is based on
+     https://stackoverflow.com/questions/33658521/how-to-make-a-uilabel-clickable
+     */
+    @objc func segueToMap(sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: MAP_SEGUE, sender: self)
     }
     
-    @IBAction func segueToCompanyInfo(sender: UITapGestureRecognizer) {
+    /*
+     This is based on
+     https://stackoverflow.com/questions/33658521/how-to-make-a-uilabel-clickable
+     */
+    @objc func segueToCompanyInfo(sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: COMPANY_DETAIL_SEGUE, sender: self)
     }
     
+    /*
+     Depending on where it was navigated from, the optionButton performs different operation.
+     If it is from 'My' tab, it navigates to QR generation page.
+     else if is from 'Search' tab, it performs adding self.card into the contact list.
+     */
     @IBAction func didTouchOptionButton(_ sender: Any) {
-        // Segue to QR code generation
+        // If navigated from 'My' tab
         if isEditable {
             performSegue(withIdentifier: QR_CODE_GENERATION_SEGUE, sender: self)
         } else {
-            // Attempt adding this card to current user's contact list. Pop this view controller if it is successful
+            // Attempt adding this card to contact list.
+            // Pop this view controller if it is successful, otherwise display appropriate message
             if let card = card, let databaseController = databaseController, databaseController.addToContact(card: card) {
                 navigationController?.popViewController(animated: true)
             } else {
-                displayMessage(title: "Error", message: "Fail to add the card to contact list. Try again.")
+                displayMessage(title: "Failed adding card", message: "Fail to add the card to contact list. Try again.")
             }
         }
     }
@@ -137,7 +158,9 @@ class CardDetailViewController: UIViewController, EditCardDelegate {
     }
     
     // MARK: - Delegation
-    // This is invoked when the user sucessfully edits a card from EditViewController, updated card will be passed and populated again.
+    /*
+     This is invoked when the user sucessfully edits the card. The updated card will be passed and populated again.
+     */
     func updateCard(card: Card) {
         self.card = card
         setCardDetails()

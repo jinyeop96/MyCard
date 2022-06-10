@@ -72,16 +72,23 @@ class SignInViewController: UIViewController, DatabaseListener {
     //MARK: - Database specific methods
     func didNotSucceedSignIn() {
         indicator.stopAnimating()
-        displayMessage(title: "Error", message: "Sign in failed. Try again.")
+        displayMessage(title: "Sign In failed", message: "Please check email and/or password again.")
     }
 
     // MARK: - This view specific methods
     @IBAction func onSignIn(_ sender: UIButton) {
-        guard let email = emailTextField.text, let password = passwordTextField.text, password.count >= 6 else {
-                  displayMessage(title: "Invalid", message: "Provided detail(s) invalid.")
-                  return
-              }
+        // 1. Validity check
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            displayMessage(title: "Invalid", message: "Email and password must not be empty.")
+            return
+        }
         
+        guard password.count >= 6 else {
+            displayMessage(title: "Invalid", message: "Password must be at least 6 characters long.")
+            return
+        }
+        
+        // Signing in
         indicator.startAnimating()
         databaseController?.signIn(email: email, password: password, rememberDetail: checkBoxOutlet.isSelected)
     }

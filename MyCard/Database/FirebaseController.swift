@@ -67,7 +67,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     // MARK: - Authentication
-    // This function attempts to create a new account with input email and password, then it creates documents in 'users', 'contacts' and 'individualCards' collections.
+    /*
+     This function attempts to create a new account with input email and password, then it creates documents in 'users', 'contacts' and 'individualCards' collections.
+     
+     Code for user creation is based on
+     https://firebase.google.com/docs/auth/ios/start
+     
+     I have modified to code asynchronously rather than having closure.
+     */
     func signUp(user: User, email: String, password: String){
         Task{
             do {
@@ -101,7 +108,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
         } // Task ends
     }
     
-    // This fuction attempts to sign in with input email and password.
+    /*
+     This fuction attempts to sign in with input email and password.
+     
+     Code for user singin in is based on
+     https://firebase.google.com/docs/auth/ios/start
+     
+     This calls signing in method asynchronously instead of closure.
+     */
     func signIn(email: String, password: String, rememberDetail: Bool) {
         Task {
             do {
@@ -131,6 +145,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
         } // Task ends
     }
     
+    /*
+     This function signs out the user from Firebase Authentication
+     
+     Signing out code is from
+     https://firebase.google.com/docs/auth/ios/custom-auth
+     
+     I have added my own logic for the ther operations.
+     */
     func signOut() {
         
         Task {
@@ -153,8 +175,16 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
     }
     
-    // It deletes all individual cards first, and from users collection.
-    // It then deletes from Google authentication
+    /*
+     It deletes all individual cards first, and from users collection.
+     It then deletes the user from Google Firebase Authentication
+     
+     Deleting a user from Firebase Authentication is based on
+     https://firebase.google.com/docs/auth/ios/manage-users
+     
+     Deleting documents from Firesotr is based on
+     https://firebase.google.com/docs/firestore/manage-data/delete-data
+     */
     func deleteUser() {
         // 1. Remove all user's cards
         for card in userCards {
@@ -170,12 +200,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
             // 4. Remove user detail document
             usersRef?.document(userId).delete()
-            
-            // 5. Erase signing in detail
-            eraseSignInDetails()
+
         }
 
-        // 5. Delete user authentication
+        // 5. Delete user from Firebase Authentication
         authController.currentUser?.delete(completion: { error in
             if let error = error {
                 print(error)
@@ -183,11 +211,22 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 print("deleted")
             }
         })
+        
+        // 6. Erase signing in detail
+        eraseSignInDetails()
 
-        // 6. Back to Sign In page
+        // 7. Back to Sign In page
         switchRootViewController(identifier: "SignInNavigationController")
     }
     
+    /*
+     It update current user's detail
+     
+     Updating a user document is based on
+     https://firebase.google.com/docs/firestore/manage-data/add-data
+     
+     I modified not to have completion handler for each updateData function.
+     */
     func updateUser(user: User) -> Bool {
         if let userId = user.id, let userRef = usersRef?.document(userId) {
             userRef.updateData(["title": user.title ?? ""])
@@ -204,6 +243,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
         return false
     }
     
+    /*
+     This updates the current user's sign in password from Firebase Authentication
+     
+     This is based on
+     https://firebase.google.com/docs/auth/ios/manage-users
+     
+     I simply added my own function in the completion handler.
+     */
     func updatePassword(password: String) {
         authController.currentUser?.updatePassword(to: password) {error in
             // Erase stroed user sigining in details in the local stroage
@@ -213,10 +260,21 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     
-    
     // MARK: - Documents sources methods
-    // This function is called only by current user for adding a new card.
-    // This create a new document in 'cards' collection, then the new document ID is stored in user's indivisual card list.
+    /*
+     For addCard(), removeCard(), updateCard(), addToContact() and removeFromContact(),
+     
+     Updating data is based on
+     https://firebase.google.com/docs/firestore/manage-data/add-data
+     
+     Removing data is base on
+     https://firebase.google.com/docs/firestore/manage-data/delete-data
+     */
+    
+    /*
+     This function is called only by current user for adding a new card.
+     This create a new document in 'cards' collection, then the new document ID is stored in user's indivisual card list.
+     */
     func addCard(card: Card) -> Bool{
         do {
             // 1. Add a new document in 'cards' collection
@@ -227,15 +285,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 individualCardList.updateData(["individualCardIds" : FieldValue.arrayUnion([newCardRef])])
             }
             
-            //alertListener(listenerType: .newCard, successful: true)
             return true
         } catch {
-            //alertListener(listenerType: .newCard, successful: false)
             return false
         } // do-catch ends
     }
     
-    // This function removes the card ID from all referencing contact lists, owner's indivisual card list and the card itself
+    /*
+     This function removes the card ID from all referencing contact lists, owner's indivisual card list and the card itself
+     */
     func removeCard(card: Card) {
         if let cardId = card.id, let individualCardsId = currentUser?.individualCardId, let removingCardRef = cardsRef?.document(cardId) {
             Task {
@@ -257,6 +315,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
     }
     
+    /*
+     It simply updates card details
+     */
     func updateCard(card: Card) -> Bool {
         if let cardId = card.id, let cardRef = cardsRef?.document(cardId){
             cardRef.updateData(["mobile": card.mobile ?? ""])
@@ -274,6 +335,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
         return false
     }
     
+    /*
+     This is invoked from 'Search' tab. It iterates for all cards and searches for the target name.
+     */
     func searchCards(searchText: String) -> [Card]{
         var filteredCards: [Card] = []
         
@@ -285,7 +349,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
         return filteredCards
     }
     
-    // This function adds the input card ID to user's contact list
+    /*
+     This function adds the input card ID to user's contact list
+     */
     func addToContact(card: Card) -> Bool {
         // 1. Check given card exists in collection
         if let cardId = card.id, let cardRef = cardsRef?.document(cardId), let contactId = currentUser?.contactId, let userContactList = contactsRef?.document(contactId) {
@@ -302,7 +368,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
         return false
     }
     
-    // This function removes card ID from user's contact list
+    /*
+     This function removes card ID from user's contact list
+     */
     func removeFromContact(card: Card) {
         // 1. check if the input card exists
         if let cardId = card.id, let contactId = currentUser?.contactId, let cardRef = cardsRef?.document(cardId), let userContactList = contactsRef?.document(contactId) {
@@ -311,9 +379,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
     }
     
+    /*
+     Switch root view controller between Sign In page and Main pages
+     
+     This is based on
+     https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
+     
+     I have not modified from the original source
+     */
     func switchRootViewController(identifier: String) {
-        // Switch root view controller between Sign In page and Main pages
-        // https://fluffy.es/how-to-transition-from-login-screen-to-tab-bar-controller/
         Task {
             let storyboard = await UIStoryboard(name: "Main", bundle: nil)
             let switchingNavigationController = await storyboard.instantiateViewController(identifier: identifier)
@@ -324,7 +398,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     // MARK: - FirebaseController specific methods
-    // This delivers the appropriate signs to the corresponding listeners
+    /*
+     This delivers the alert to the corresponding listeners
+     */
     private func alertListener(listenerType: ListenerType, successful: Bool){
         listeners.invoke { (listener) in
             if listenerType == .signUp && successful {
@@ -348,6 +424,29 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
         }
     }
+    
+    /*
+     This checks whether given card id exists. If so, it returns the card object, else nil
+     */
+    func getCardById(id: String) -> Card?{
+        for card in allCards {
+            if let cardId = card.id, cardId == id{
+                return card
+            }
+        }
+        
+        return nil
+    }
+    
+    private func eraseSignInDetails() {
+        self.userDefaults.set("", forKey: "email")
+        self.userDefaults.set("", forKey: "password")
+        self.userDefaults.set(false, forKey: "rememberDetail")
+    }
+    
+    /*
+     The folloiwing functions are based on the unit materials.
+     */
     
     private func setUpUserListener(email: String) {
         usersRef?.whereField("email", isEqualTo: email).addSnapshotListener { (querySnapshot, error) in
@@ -407,7 +506,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
             // Assign cards into allCards
             if change.type == .added {
-                //allCards.insert(card, at: Int(change.newIndex))
                 allCards.append(card)
             } else if change.type == .modified {
                 allCards[Int(change.oldIndex)] = card
@@ -471,23 +569,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         } // if-let ends
     }
     
-    // This checks whether given card id exists
-    // If so, it returns the card object, else nil
-    func getCardById(id: String) -> Card?{
-        for card in allCards {
-            if let cardId = card.id, cardId == id{
-                return card
-            }
-        }
-        
-        return nil
-    }
     
-    private func eraseSignInDetails() {
-        self.userDefaults.set("", forKey: "email")
-        self.userDefaults.set("", forKey: "password")
-        self.userDefaults.set(false, forKey: "rememberDetail")
-    }
     
     
 

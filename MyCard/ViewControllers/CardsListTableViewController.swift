@@ -7,12 +7,17 @@
 
 import UIKit
 
+/*
+ This view controller executes when the user tabs on 'My', 'Contacts' or 'Search' tab.
+ Depending on the current tab, DisplayingCards object holds appropriate cards and provides functions to work with.
+*/
 class CardsListTableViewController: UITableViewController, DatabaseListener, UISearchResultsUpdating {
     // MARK: - Properties
     
-    // Lists of cards for displaynig in this table view
+    // Model for diplaying cards in the current tab
     let displayingCards = DisplayingCards()
     
+    // Properties regarding the current tab
     let MY_TAB = "My"
     let CONTACTS_TAB = "Contacts"
     let SEARCH_TAB = "Search"
@@ -31,7 +36,7 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
     
     var listenerType: ListenerType = .my    // This will be updated when user switches to another tab
     var databaseController: DatabaseProtocol?
-    var currentUser: User?
+    var currentUser: User?  // Holds current user's detail
     var searchController: UISearchController?
 
     
@@ -52,55 +57,64 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         }
     }
 
-    // This function will be invoked whenever the user switches to another tab.
-    // Depending on the current tab, it adds new listener to the databaseController, update the navigation bar title and enable/disable the BarButtonItem.
+    /*
+     This function will be invoked whenever the user switches to another
+     Depending on the current tab, it adds self as a updated listener to the Database Controller, updates the navigation bar title and enables/disables the BarButtonItem and Search Controller
+     
+     Setting BarButtonItem programmatically is based on
+     https://www.hackingwithswift.com/example-code/uikit/how-to-add-a-bar-button-to-a-navigation-bar
+     
+     It provides simple examples how to set BarButtonItem programmaticlly. I simply modified #selector function to barButtonTapped() for implementing my logic.
+     */
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // Unhide tab bar below
         tabBarController?.tabBar.isHidden = false
         
-        // 1. Update the current tab
+        // 1. Update the currentTab, so we can set appropriate elements
         currentTab = tabBarController?.tabBar.selectedItem?.title
         
         if let currentTab = currentTab {
-            // 2. Update listener type, BarButtonItem depending on the tab and navigation title
-            // Set BarButtonItem programmatically: https://www.hackingwithswift.com/example-code/uikit/how-to-add-a-bar-button-to-a-navigation-bar
+            // 2. Update listener type, enable/disable BarButtonItem and update navigation title
             switch currentTab {
-            case CONTACTS_TAB:
-                listenerType = .contacts
-                navigationItem.rightBarButtonItem = nil
-                navigationController?.navigationBar.topItem?.title = CONTACTS_TAB
-                navigationItem.searchController = nil   // Disable the search controller
+                case CONTACTS_TAB:
+                    listenerType = .contacts
+                    navigationItem.rightBarButtonItem = nil // Disable the BarButtonItem
+                    navigationController?.navigationBar.topItem?.title = CONTACTS_TAB
+                    navigationItem.searchController = nil   // Disable the search controller
+                    
+                case SEARCH_TAB:
+                    listenerType = .searchCards
                 
-            case SEARCH_TAB:
-                listenerType = .searchCards
-                // Asscociated function navigates to the ScannerViewController
-                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(barButtonTapped))
-                navigationController?.navigationBar.topItem?.title = SEARCH_TAB
-                
-                // 2.1 Also enable serach bar if it is on Searching tab
-                if let searchController = searchController {
-                    navigationItem.searchController = searchController
-                }
-                
-            default: // MY_TAB
-                listenerType = .my
-                // Asscociated function navigates to the NewCardViewController
-                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(barButtonTapped))
-                navigationController?.navigationBar.topItem?.title = MY_TAB
-                navigationItem.searchController = nil   // Disable the search controller
+                    // Asscociated function navigates to the QR Scanner
+                    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(barButtonTapped))
+                    navigationController?.navigationBar.topItem?.title = SEARCH_TAB
+                    
+                    // Also enable Search Controller on 'Search' tab.
+                    if let searchController = searchController {
+                        navigationItem.searchController = searchController
+                    }
+                    
+                default: // MY_TAB
+                    listenerType = .my
+                    // Asscociated function navigates to creating a new card page
+                    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(barButtonTapped))
+                    navigationController?.navigationBar.topItem?.title = MY_TAB
+                    navigationItem.searchController = nil   // Disable the search controller
             }
         }
-        // 5. Add updated listener to the databaseController
+        
+        // 5. Add self as a new listener to the Database Controller
         databaseController?.addListener(listener: self)
     }
     
-    // This is invoked prior to the viewDidAppear(). It removes current listener and removes all cards in DisplayingCards object model
+    /*
+     It removes self as a old listener from the Database Controller before navigating to another tab or view
+     */
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
-        
     }
     
     
@@ -120,7 +134,6 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         }
     }
     
-    // Setting Section names
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case BUSINESS_CARD_SECTION:
@@ -132,9 +145,11 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         }
     }
 
-    // Assign appropriate cards for sections
+    /*
+     Depending on the current cell, it calls a function that returns for populating cells
+     */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // If the section needs cards details, call assignCardOnCell()
+        // If the section needs cards details, call assignCardOnCell() with an indexPath
         if indexPath.section == BUSINESS_CARD_SECTION || indexPath.section == PERSONAL_CARD_SECTION {
             return assignCardOnCell(indexPath: indexPath)
         }
@@ -144,25 +159,29 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         
     }
     
-    // It removes the card from 'My' or 'Contact' list. If the user is on searching tab, this function will do nothing.
+    /*
+     It removes the card from 'My' or 'Contact' list. If the user is on searching tab, this function will do nothing.
+     */
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete, let currentTab = currentTab {
             
-            // Get the deleting card
+            // Get the card to remove
             let card = displayingCards.getDeletingCardAt(indexPath: indexPath)
             
             if currentTab == MY_TAB {
-                databaseController?.removeCard(card: card)
+                databaseController?.removeCard(card: card)  // Removes from the Database
             }
             
             if currentTab == CONTACTS_TAB {
-                databaseController?.removeFromContact(card: card)
+                databaseController?.removeFromContact(card: card) // Removes from the contacts list only
             }
             
         }
     }
     
-    // This only enables the business and personal card section editable. Info section is disabled.
+    /*
+     This only enables the 'business' and 'personal' card section editable. Info section is disabled.
+     */
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == BUSINESS_CARD_SECTION || indexPath.section == PERSONAL_CARD_SECTION {
             return true
@@ -178,7 +197,9 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
     
     
     // MARK: - This view specific methods
-    // BarButtonItem appears iff user is on 'My' or 'Search' tab. If it is tapped, it performs a segue
+    /*
+     This is invoked in 'My' or 'Search' tab for navigating to another view.
+     */
     @objc func barButtonTapped(sender: Any) {
         if let currentTab = currentTab {
             if currentTab == MY_TAB {
@@ -191,7 +212,11 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         }
     }
     
+    /*
+     This is invoked for populating cards' details on cell by retrieving from the DisplayingCards object.
+     */
     private func assignCardOnCell(indexPath: IndexPath) -> UITableViewCell {
+        // 1. Appropriately set the cell and card object
         var cell: UITableViewCell?
         var card: Card?
     
@@ -203,6 +228,7 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
             card = displayingCards.getPersonalCardAt(row: indexPath.row)
         }
          
+        // 2. Assign details into the cell
         if let cell = cell, let card = card {
             var content = cell.defaultContentConfiguration()
             
@@ -219,12 +245,17 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
             cell.contentConfiguration = content
         }
         
-       return cell! // Since the cell is surely assigned, we can safely force unwrap
+        // 3. Return the cell. Since the cell is surely assigned, we can safely force unwrap.
+        return cell!
     }
     
+    /*
+     It simply gets the number of business and personal cards respectively and assign them into the cell
+     */
     private func assignInfoCell(indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: INFO_CELL, for: indexPath)
         var content = cell.defaultContentConfiguration()
+        
         content.text = "\(displayingCards.getBusinessCardsCount()) business and \(displayingCards.getPersonalCardsCount()) personal cards in the list."
         cell.contentConfiguration = content
         return cell
@@ -232,11 +263,14 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
     
     
     // MARK: - Database specific methods
-    // This is invoked by snapshot listener in databaseController when card or contact lists changes, or called from Search tab
+    
+    /*
+     This is invoked by snapshot listener in databaseController when the 'my cards' or 'contacts' lists change, or called after searching in 'Search' tab.
+     */
     func onCardsListChange(cards: [Card]) {
         displayingCards.removeAllCards()
         
-        // Iterate for all input cards and append them into displayingCards model
+        // Iterate for all input cards and append them into DisplayingCards model
         for card in cards {
             if let isPersonal = card.isPersonal {
                 displayingCards.appendCard(card: card, isPersonal: isPersonal)
@@ -255,6 +289,7 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
             return
         }
         
+        // Search cards and populate
         if let filteredCards = databaseController?.searchCards(searchText: searchText) {
             onCardsListChange(cards: filteredCards)
         }
@@ -264,13 +299,13 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
 
     //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Set properties depending on the current tab when navigating to CardDetailViewController
+        
         if segue.identifier == CARD_DETAIL_SEGUE, let currentTab = currentTab {
             
             let destination = segue.destination as! CardDetailViewController
             destination.databaseController = databaseController
             
-            // Set properties depending on the current tab
+            // Set properties depending on the current tab when navigating to card detail view
             switch currentTab {
                 case CONTACTS_TAB :
                     destination.isEditable = false
@@ -293,7 +328,7 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
                     destination.card = displayingCards.getPersonalCardAt(row: indexPath.row)
                 }
             }
-        } // End of navigation to CardDetailViewController
+        }
         
         if segue.identifier == NEW_CARD_SEGUE {
             let destination = segue.destination as! NewCardViewController
@@ -304,6 +339,7 @@ class CardsListTableViewController: UITableViewController, DatabaseListener, UIS
         if segue.identifier == SCANNER_SEGUE {
             let destination = segue.destination as! ScannerViewController
             destination.databaseController = databaseController
+ 
         }
     }
     

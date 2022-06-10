@@ -34,21 +34,21 @@ class EditViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Load the card details onto the fields
+        // 1. Load the card details onto the fields
         if let card = card, let isPersonal = card.isPersonal{
             if isPersonal {
                 companyLabel.text = "Company"
                 isCardPersonal = true
             }
             
-            
+            // 1.1 Populate where appripriate
             mobileTextField.text = card.mobile ?? ""
             instagramTextField.text = card.instagram ?? "Not provided"
             linkedInTextField.text = card.linkedIn ?? "Not provided"
             gitTextField.text = card.git ?? "Not provided"
             companyTextField.text = card.companyName ?? ""
             
-            // Split address into street, suburb, state and postcode
+            // 1.2 Split address into street, suburb, state and postcode, and populate
             let address = card.address?.components(separatedBy: ", ")
             if let address = address {
                 streetTextField.text = address[0]
@@ -65,7 +65,7 @@ class EditViewController: UIViewController{
     
     // MARK: - View specific methods
     @IBAction func onDone(_ sender: UIBarButtonItem) {
-        // 1. Check validation
+        // 1. Check validity
         guard let mobile = mobileTextField.text, !mobile.isEmpty,
               let street = streetTextField.text, !street.isEmpty,
               let suburb = suburbTextField.text, !suburb.isEmpty,
@@ -97,12 +97,13 @@ class EditViewController: UIViewController{
             card.address = street + ", " + suburb + ", " + state + ", " + postcode
         }
         
-        // 3. Try updating the card
+        // 3. Try updating the card.
+        // If it succeeds, pass the updated card back to the delegate, otherwise display a message
         if let databaseController = databaseController, let card = card, databaseController.updateCard(card: card) {
             delegate?.updateCard(card: card)
             navigationController?.popViewController(animated: true)
         } else {
-            displayMessage(title: "Error", message: "Unable to edit the card. Please try again.")
+            displayMessage(title: "Failed updating the card", message: "Unable to edit the card. Please try again.")
         }
     }
 }
